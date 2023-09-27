@@ -12,6 +12,8 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/recipe-config/pom.xml" />
+        <option value="$PROJECT_DIR$/recipe-ui/pom.xml" />
         <option value="$PROJECT_DIR$/../recipe-frontend/pom.xml" />
       </set>
     </option>

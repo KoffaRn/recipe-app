@@ -1,4 +1,4 @@
-package org.koffa.recipefrontend.gui;
+package org.koffa.recipefrontend.gui.send;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;

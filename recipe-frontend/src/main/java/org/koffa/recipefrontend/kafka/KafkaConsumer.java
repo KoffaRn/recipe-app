@@ -1,14 +1,13 @@
-package org.koffa.recipefrontend;
+package org.koffa.recipefrontend.kafka;
 
-import org.koffa.recipefrontend.gui.LoggerBox;
-import org.springframework.beans.factory.annotation.Value;
+import org.koffa.recipefrontend.gui.send.LoggerBox;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KafkaConsumer {
     LoggerBox loggerBox;
+
     public KafkaConsumer(LoggerBox loggerBox) {
         this.loggerBox = loggerBox;
     }

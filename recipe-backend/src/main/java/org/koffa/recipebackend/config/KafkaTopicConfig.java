@@ -10,7 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
-    @Value(value = "${spring.kafka.topic-name}")
+    @Value(value = "${spring.kafka.recipe.topic-name}")
     private String topic;
     @Bean
     public NewTopic createTopic() {

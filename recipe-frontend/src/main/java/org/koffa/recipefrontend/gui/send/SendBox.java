@@ -1,11 +1,10 @@
-package org.koffa.recipefrontend.gui;
+package org.koffa.recipefrontend.gui.send;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
-import org.apache.kafka.clients.KafkaClient;
 import org.koffa.recipefrontend.api.RecipeSender;
 import org.koffa.recipefrontend.pojo.Ingredient;
 import org.koffa.recipefrontend.pojo.Recipe;

@@ -9,9 +9,20 @@ import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import java.lang.reflect.Type;
 
 public class MyStompSessionHandler implements StompSessionHandler {
+
+    public MyStompSessionHandler() {
+    }
+
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+        System.out.println("Connected");
+    }
 
+    private Object getSampleMessage() {
+        Message message = new Message();
+        message.setMessage("Tja");
+        message.setSender("koffa");
+        return message;
     }
 
     @Override
@@ -26,15 +37,11 @@ public class MyStompSessionHandler implements StompSessionHandler {
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return null;
+        return Message.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        Message message = (Message) payload;
-        System.out.println(message);
-    }
-    public void subscribe(StompSession session, long roomId) {
-        session.subscribe("/recipechat/" + roomId, this);
+        //messageCallback.onMessageReceived((Message) payload);
     }
 }

@@ -13,4 +13,7 @@ public class RecipeService {
     public Recipe save(Recipe recipe) {
         return recipeRepository.save(recipe);
     }
+    public Recipe get(long id) {
+        return recipeRepository.getReferenceById(id);
+    }
 }

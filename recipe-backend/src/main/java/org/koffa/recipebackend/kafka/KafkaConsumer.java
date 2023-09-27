@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaConsumer {
     private final RecipeService recipeService;
-    @Value("${spring.kafka.topic-name}")
+    @Value("${spring.kafka.recipe.topic-name}")
             private String topic;
     Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
     public KafkaConsumer(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
-    @KafkaListener(topics = "${spring.kafka.topic-name}", groupId = "${spring.kafka.group-id}")
+    @KafkaListener(topics = "${spring.kafka.recipe.topic-name}", groupId = "${spring.kafka.recipe.group-id}")
     public void consume(Recipe recipe) {
         try {
             recipeService.save(recipe);

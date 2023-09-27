@@ -1,4 +1,4 @@
-package org.koffa.recipefrontend.gui;
+package org.koffa.recipefrontend.gui.send;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;

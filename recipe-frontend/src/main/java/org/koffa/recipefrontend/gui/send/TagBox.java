@@ -1,4 +1,4 @@
-package org.koffa.recipefrontend.gui;
+package org.koffa.recipefrontend.gui.send;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;

@@ -16,7 +16,7 @@ public class KafkaProducer {
     private final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
     @Autowired
     private KafkaTemplate<String, Recipe> kafkaTemplate;
-    @Value(value = "${spring.kafka.topic-name}")
+    @Value(value = "${spring.kafka.recipe.topic-name}")
     private String topicName;
     public void sendMessage(Recipe message) {
         CompletableFuture<SendResult<String, Recipe>> future = kafkaTemplate.send(topicName, message);
