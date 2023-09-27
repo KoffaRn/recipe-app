@@ -20,4 +20,6 @@ public class Recipe {
     private List<String> steps;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> tags;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Message> messages;
 }

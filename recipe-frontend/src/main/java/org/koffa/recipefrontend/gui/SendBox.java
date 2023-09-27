@@ -11,6 +11,7 @@ import org.koffa.recipefrontend.pojo.Ingredient;
 import org.koffa.recipefrontend.pojo.Recipe;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 @Component
 public class SendBox extends VBox {
@@ -37,6 +38,15 @@ public class SendBox extends VBox {
         scrollPane.setContent(vBox);
         this.getChildren().add(scrollPane);
         if(recipeSender == null) loggerBox.error("Could not create API instance, make sure URL is configured and backend up and running.", new RuntimeException("API ERROR"));
+        sendButton.setOnAction(event -> {
+            Recipe recipe = getRecipe();
+            if(recipe == null) return;
+            try {
+                loggerBox.info(recipeSender.send(recipe));
+            } catch (IOException e) {
+                loggerBox.error("Could not send recipe", e);
+            }
+        });
     }
 
     private Recipe getRecipe() {
