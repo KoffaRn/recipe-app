@@ -66,7 +66,8 @@ public class FullRecipe extends Application {
         chatMessage = new TextField();
         Button sendButton = new Button("Send");
         sendButton.setOnAction(actionEvent -> {
-                sendMessage();
+            sendMessage();
+            chatMessage.setText("");
         });
         root.getChildren().addAll(recipeName, recipeDescription,ingredients,steps,tags,chat,chatMessage,sendButton);
         scrollPane.setContent(root);

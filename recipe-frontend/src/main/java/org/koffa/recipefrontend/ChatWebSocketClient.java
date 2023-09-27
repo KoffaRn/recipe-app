@@ -2,10 +2,8 @@ package org.koffa.recipefrontend;
 
 import org.koffa.recipefrontend.gui.get.FullRecipe;
 import org.koffa.recipefrontend.pojo.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;

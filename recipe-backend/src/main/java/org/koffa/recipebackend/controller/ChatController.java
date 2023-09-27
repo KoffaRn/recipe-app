@@ -20,7 +20,6 @@ public class ChatController {
     @MessageMapping("/chat/{recipeId}")
     @SendTo("/topic/{recipeId}")
     public ChatMessage sendMessage(@DestinationVariable long recipeId, ChatMessage chatMessage) {
-        System.out.println(chatMessage.getMessage());
         return chatMessage;
     }
 }
