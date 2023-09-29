@@ -10,11 +10,12 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Recipe;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 @Service
-public class ApiHandler implements RecipeSender, RecipeGetter {
+public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter {
     @Value(value = "${recipe-api.url}")
     private String url;
     public ApiHandler() {
@@ -76,5 +77,12 @@ public class ApiHandler implements RecipeSender, RecipeGetter {
         br.close();
         connection.disconnect();
         return response.toString();
+    }
+
+    @Override
+    public List<ChatMessage> getRecipeChatMessages(long recipeId) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url + "/chat/get/" + recipeId).openConnection();
+        Gson gson = new Gson();
+        return gson.fromJson(getString(connection), new TypeToken<List<ChatMessage>>(){}.getType());
     }
 }

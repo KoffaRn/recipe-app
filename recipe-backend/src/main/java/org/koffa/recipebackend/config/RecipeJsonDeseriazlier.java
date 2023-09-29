@@ -21,9 +21,9 @@ public class RecipeJsonDeseriazlier extends JsonDeserializer<Recipe>  {
     }
 @Override
     public Recipe deserialize(String topic, byte[] data) {
+    System.out.println("deserializing recipe");
         ObjectMapper mapper = new ObjectMapper();
         try {
-            System.err.println("Deserializing data");
             return mapper.readValue(data, Recipe.class);
         } catch (Exception e) {
             logger.error(e.getMessage());

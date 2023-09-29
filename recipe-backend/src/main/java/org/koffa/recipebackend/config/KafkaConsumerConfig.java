@@ -2,7 +2,9 @@ package org.koffa.recipebackend.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.entity.Recipe;
+import org.koffa.recipebackend.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +25,26 @@ public class KafkaConsumerConfig {
     private String bootstrapAddress;
     @Value(value = "${spring.kafka.recipe.group-id}")
     private String groupId;
+    @Value(value = "${spring.kafka.chat.group-id}")
+    private String chatGroupId;
+    @Value(value = "${spring.kafka.chat.topic-name}")
+    private String chatTopicName;
+
+
 
     @Bean
     public ConsumerFactory<String, Recipe> consumerFactory() {
+        Map<String, Object> props = getCommonProps(groupId);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier()));
+    }
+    @Bean
+    public ConsumerFactory<String, ChatMessage> chatConsumerFactory() {
+        getCommonProps(chatGroupId);
+        Map<String, Object> props = getCommonProps(chatGroupId);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new ChatMessageJsonDeserializer()));
+    }
+
+    private Map<String, Object> getCommonProps(String groupId) {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -33,14 +52,11 @@ public class KafkaConsumerConfig {
         props.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
                 groupId);
-        props.put(
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class.getName()); // Note the use of .getName()
-        props.put(
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 ErrorHandlingDeserializer.class.getName());
-
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier()));
+        return props;
     }
 
     @Bean
@@ -49,6 +65,12 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, Recipe> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        return factory;
+    }
+    @Bean ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaChatListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(chatConsumerFactory());
         return factory;
     }
 }

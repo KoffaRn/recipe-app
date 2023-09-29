@@ -12,9 +12,15 @@ public class KafkaTopicConfig {
     private String bootstrapServers;
     @Value(value = "${spring.kafka.recipe.topic-name}")
     private String topic;
+    @Value(value = "${spring.kafka.chat.topic-name}")
+    private String topicChat;
     @Bean
     public NewTopic createTopic() {
         return TopicBuilder.name(topic)
+                .build();
+    }
+    @Bean public NewTopic createTopicChat() {
+        return TopicBuilder.name(topicChat)
                 .build();
     }
 }

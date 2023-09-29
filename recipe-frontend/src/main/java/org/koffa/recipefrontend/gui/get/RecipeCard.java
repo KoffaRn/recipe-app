@@ -4,8 +4,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
-import org.koffa.recipefrontend.helper.FullRecipeBuilder;
+import javafx.stage.Stage;
+import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.pojo.Recipe;
+import org.springframework.stereotype.Component;
 
 public class RecipeCard extends VBox {
     public RecipeCard(Recipe recipe, String url) {
@@ -18,9 +20,11 @@ public class RecipeCard extends VBox {
         card.getItems().addAll(recipeBox, getRecipeButton);
         this.getChildren().addAll(card);
         getRecipeButton.setOnAction(event -> {
-            FullRecipe fullRecipe = new FullRecipeBuilder(recipe,url).build();
+            FullRecipe fullRecipe = new FullRecipe(new ApiHandler());
+            fullRecipe.setRecipe(recipe);
+            fullRecipe.setUrl(url);
             try {
-                fullRecipe.start(new javafx.stage.Stage());
+                fullRecipe.start(new Stage());
             } catch (Exception e) {
                 e.printStackTrace();
             }

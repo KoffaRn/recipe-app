@@ -1,6 +1,7 @@
 package org.koffa.recipefrontend;
 
 import org.koffa.recipefrontend.gui.get.FullRecipe;
+import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Message;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -43,11 +44,11 @@ public class ChatWebSocketClient implements StompFrameHandler {
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return Message.class;
+        return ChatMessage.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        fullRecipe.newMessage(((Message) payload));
+        fullRecipe.newMessage(((ChatMessage) payload));
     }
 }
