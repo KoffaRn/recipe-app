@@ -5,12 +5,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.pojo.Recipe;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class RecipeCard extends VBox {
-    public RecipeCard(Recipe recipe, String url) {
+    Logger logger = LoggerFactory.getLogger(RecipeCard.class);
+    @Autowired
+    BeanFactory beanFactory;
+    private Recipe recipe;
+    @Value(value = "${websocket.url}")
+    private String url;
+    private FullRecipe fullRecipe;
+    public RecipeCard(Recipe recipe) {
         SplitPane card = new SplitPane();
         VBox recipeBox = new VBox();
         Button getRecipeButton = new Button("View recipe");
@@ -20,13 +30,11 @@ public class RecipeCard extends VBox {
         card.getItems().addAll(recipeBox, getRecipeButton);
         this.getChildren().addAll(card);
         getRecipeButton.setOnAction(event -> {
-            FullRecipe fullRecipe = new FullRecipe(new ApiHandler());
-            fullRecipe.setRecipe(recipe);
-            fullRecipe.setUrl(url);
+            fullRecipe = beanFactory.getBean(FullRecipe.class, recipe);
             try {
                 fullRecipe.start(new Stage());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error starting full recipe > " + e.getMessage());
             }
         });
     }

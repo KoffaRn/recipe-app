@@ -4,7 +4,6 @@ import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.entity.Message;
 import org.koffa.recipebackend.kafka.KafkaProducer;
 import org.koffa.recipebackend.service.ChatMessageService;
-import org.koffa.recipebackend.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -22,8 +21,8 @@ import java.util.List;
 @Controller
 @RequestMapping("api/v1/chat")
 public class ChatController {
-    private KafkaProducer kafkaProducer;
-    private ChatMessageService chatMessageService;
+    private final KafkaProducer kafkaProducer;
+    private final ChatMessageService chatMessageService;
     @Autowired
     public ChatController(KafkaProducer kafkaProducer, ChatMessageService chatMessageService) {
         this.kafkaProducer = kafkaProducer;

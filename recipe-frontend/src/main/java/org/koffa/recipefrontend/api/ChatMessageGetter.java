@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ChatMessageGetter {
-    public List<ChatMessage> getRecipeChatMessages(long recipeId) throws IOException;
+    List<ChatMessage> getRecipeChatMessages(long recipeId) throws IOException;
 }

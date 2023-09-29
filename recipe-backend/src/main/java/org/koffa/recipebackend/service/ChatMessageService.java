@@ -16,8 +16,6 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
     }
     public List<ChatMessage> getByRecipeId(long recipeId) {
-        List<ChatMessage> messages = chatMessageRepository.findByRecipeId(recipeId);
-        System.out.println("No of msg: " + messages.size());
-        return messages;
+        return chatMessageRepository.findByRecipeId(recipeId);
     }
 }

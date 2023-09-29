@@ -1,6 +1,5 @@
 package org.koffa.recipebackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 

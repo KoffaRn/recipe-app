@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter {
     @Value(value = "${recipe-api.url}")
     private String url;
-    public ApiHandler() {
-    }
 
     @Override
     public String send(Recipe recipe) throws IOException {

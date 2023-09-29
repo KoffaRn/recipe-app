@@ -4,8 +4,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
+import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.api.RecipeGetter;
 import org.koffa.recipefrontend.pojo.Recipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 @Component
 public class GetBox extends VBox {
+    Logger logger = LoggerFactory.getLogger(GetBox.class);
+    @Autowired
+    BeanFactory beanFactory;
     @Value(value = "${websocket.url}")
     private String url;
-    RecipeGetter recipeGetter;
-    SplitPane recipeCards;
-    ButtonBar tagsBar;
+    private final RecipeGetter recipeGetter;
+    private final SplitPane recipeCards;
+    private final ButtonBar tagsBar;
 
-    public GetBox(RecipeGetter recipeGetter) throws IOException {
+    public GetBox(ApiHandler apiHandler) throws IOException {
         Button allRecipesButton = new Button("All recipes");
 
         this.tagsBar = new ButtonBar();
         tagsBar.getButtons().add(allRecipesButton);
-        this.recipeGetter = recipeGetter;
-        populateTags(recipeGetter.getAllTags());
+        this.recipeGetter = apiHandler;
+        populateTags(apiHandler.getAllTags());
 
         this.recipeCards = new SplitPane();
         recipeCards.setOrientation(javafx.geometry.Orientation.VERTICAL);
@@ -38,10 +46,10 @@ public class GetBox extends VBox {
                 tagsBar.getButtons().clear();
                 recipeCards.getItems().clear();
                 tagsBar.getButtons().add(allRecipesButton);
-                populateTags(recipeGetter.getAllTags());
-                populateList(recipeGetter.getAllRecipes(), recipeCards);
+                populateTags(apiHandler.getAllTags());
+                populateList(apiHandler.getAllRecipes(), recipeCards);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         });
     }
@@ -68,7 +76,7 @@ public class GetBox extends VBox {
 
     private void populateList(List<Recipe> recipes, SplitPane recipeCards) {
         for(Recipe recipe : recipes) {
-            recipeCards.getItems().add(new RecipeCard(recipe, url));
+            recipeCards.getItems().add(beanFactory.getBean(RecipeCard.class, recipe));
         }
     }
 }

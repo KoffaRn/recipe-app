@@ -2,10 +2,14 @@ package org.koffa.recipefrontend.pojo;
 
 import com.google.gson.Gson;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Data
+@Component
+@Scope("prototype")
 public class Recipe {
     private Long id;
     private String name;

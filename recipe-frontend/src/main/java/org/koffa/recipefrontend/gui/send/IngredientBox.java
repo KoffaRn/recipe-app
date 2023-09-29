@@ -13,7 +13,7 @@ public class IngredientBox extends VBox {
         super();
         ingredients.setOrientation(javafx.geometry.Orientation.VERTICAL);
         addIngredientPane(ingredients);
-        Button addIngredientButton = new Button("Add ingrediens");
+        Button addIngredientButton = new Button("Add ingredients");
         Button removeIngredient = new Button("Remove ingredient");
         ingredientButtons.getItems().addAll(addIngredientButton, removeIngredient);
         addIngredientButton.setOnAction(event -> addIngredientPane(ingredients));

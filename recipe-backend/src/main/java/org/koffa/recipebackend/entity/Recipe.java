@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name = "recipe")
 @Data
 public class Recipe {
     @Id

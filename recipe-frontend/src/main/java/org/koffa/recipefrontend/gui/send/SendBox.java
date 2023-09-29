@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
-import org.koffa.recipefrontend.api.RecipeSender;
+import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.pojo.Ingredient;
 import org.koffa.recipefrontend.pojo.Recipe;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class SendBox extends VBox {
     private final RecipeBox recipeBox;
     private final TagBox tagBox;
     private final IngredientBox ingredientBox;
-    public SendBox(RecipeSender recipeSender, LoggerBox loggerBox) {
+    public SendBox(ApiHandler apiHandler, LoggerBox loggerBox) {
         this.loggerBox = loggerBox;
         this.recipeBox = new RecipeBox();
         this.ingredientBox = new IngredientBox();
@@ -36,12 +36,12 @@ public class SendBox extends VBox {
         );
         scrollPane.setContent(vBox);
         this.getChildren().add(scrollPane);
-        if(recipeSender == null) loggerBox.error("Could not create API instance, make sure URL is configured and backend up and running.", new RuntimeException("API ERROR"));
+        if(apiHandler == null) loggerBox.error("Could not create API instance, make sure URL is configured and backend up and running.", new RuntimeException("API ERROR"));
         sendButton.setOnAction(event -> {
             Recipe recipe = getRecipe();
-            if(recipe == null) return;
             try {
-                loggerBox.info(recipeSender.send(recipe));
+                assert apiHandler != null;
+                loggerBox.info(apiHandler.send(recipe));
             } catch (IOException e) {
                 loggerBox.error("Could not send recipe", e);
             }

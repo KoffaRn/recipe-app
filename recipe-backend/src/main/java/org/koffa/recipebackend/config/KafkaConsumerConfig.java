@@ -4,7 +4,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.entity.Recipe;
-import org.koffa.recipebackend.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +25,6 @@ public class KafkaConsumerConfig {
     private String groupId;
     @Value(value = "${spring.kafka.chat.group-id}")
     private String chatGroupId;
-    @Value(value = "${spring.kafka.chat.topic-name}")
-    private String chatTopicName;
-
-
 
     @Bean
     public ConsumerFactory<String, Recipe> consumerFactory() {

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface RecipeGetter {
-    public Recipe getRecipe(int id) throws IOException;
-    public List<Recipe> getAllRecipes() throws IOException;
+    Recipe getRecipe(int id) throws IOException;
+    List<Recipe> getAllRecipes() throws IOException;
 
     ArrayList<String> getAllTags() throws IOException;
 

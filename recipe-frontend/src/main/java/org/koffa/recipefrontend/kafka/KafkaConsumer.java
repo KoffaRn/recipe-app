@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class KafkaConsumer {
-    LoggerBox loggerBox;
+    private final LoggerBox loggerBox;
 
     public KafkaConsumer(LoggerBox loggerBox) {
         this.loggerBox = loggerBox;
