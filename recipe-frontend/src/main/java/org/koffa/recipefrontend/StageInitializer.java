@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 public class StageInitializer implements ApplicationListener<StageReadyEvent> {
     private final SendBox sendBox;
     private final GetBox getBox;
-    @Value("${websocket.url}")
-    private String url;
+    @Value(value = "${app.width:800}")
+    private int width;
     public StageInitializer(SendBox sendBox, GetBox getBox) {
         this.sendBox = sendBox;
         this.getBox = getBox;
@@ -37,7 +37,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         getTab.setClosable(false);
         getTab.setContent(getBox);
         parent.getTabs().addAll(sendTab,getTab);
-        stage.setScene(new Scene(parent, 800, 600));
+        stage.setScene(new Scene(parent, width, 600));
         stage.show();
     }
 }

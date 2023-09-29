@@ -82,12 +82,16 @@ public class FullRecipe extends Application {
             sendMessage();
         });
         addDbMessages();
-        VBox chatBox = new VBox(chat, chatPane);
         ScrollPane chatScroll = new ScrollPane();
-        chatScroll.setContent(chatBox);
+        chatScroll.setContent(chat);
+        chat.setMaxWidth(350);
+        chatScroll.setMaxWidth(370);
+        chatScroll.setMaxHeight(200);
+        // Scroll to bottom of chat when new message is added
+        chatScroll.vvalueProperty().bind(chat.heightProperty());
         root.getChildren().addAll(recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
         scrollPane.setContent(root);
-        stage.setScene(new javafx.scene.Scene(scrollPane, 300, 300));
+        stage.setScene(new javafx.scene.Scene(scrollPane, 400, 500));
         stage.setTitle(recipe.getName());
         stage.show();
     }

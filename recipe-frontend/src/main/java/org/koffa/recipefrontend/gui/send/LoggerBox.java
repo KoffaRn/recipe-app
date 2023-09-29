@@ -6,14 +6,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoggerBox extends VBox {
     private final TextFlow logger = new TextFlow();
+    @Value(value = "${app.width:800}")
+    private int width;
     public LoggerBox() {
         Label loggerLabel = new Label("Logger");
         this.getChildren().addAll(loggerLabel, logger);
+        this.setMaxWidth(800);
     }
     private void log(Text text) {
         Text txtLine = new Text("--------------------\n");

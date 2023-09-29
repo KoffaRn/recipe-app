@@ -33,7 +33,9 @@ public class KafkaConsumer {
             logger.error("Received message:  but could not be saved to database " + recipe.toString() + " " + e.getMessage());
         }
     }
-    @KafkaListener(topics = "${spring.kafka.chat.topic-name}", groupId = "${spring.kafka.chat.group-id}", containerFactory = "kafkaChatListenerContainerFactory") // This is the container factory for the chat messages
+    @KafkaListener(topics = "${spring.kafka.chat.topic-name}",
+            groupId = "${spring.kafka.chat.group-id}",
+            containerFactory = "kafkaChatListenerContainerFactory") // This is the container factory for the chat messages
     public void consume(ChatMessage message) {
         // Save the chat message to the database
         try {
