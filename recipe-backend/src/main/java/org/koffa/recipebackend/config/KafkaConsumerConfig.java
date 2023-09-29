@@ -26,17 +26,27 @@ public class KafkaConsumerConfig {
     @Value(value = "${spring.kafka.chat.group-id}")
     private String chatGroupId;
 
+    /**
+     * Creates a consumer factory for the Recipe entity.
+     * @return
+     */
     @Bean
     public ConsumerFactory<String, Recipe> consumerFactory() {
         Map<String, Object> props = getCommonProps(groupId);
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier()));
     }
+
+    /**
+     * Creates a consumer factory for the ChatMessage entity.
+     * @return
+     */
     @Bean
     public ConsumerFactory<String, ChatMessage> chatConsumerFactory() {
         getCommonProps(chatGroupId);
         Map<String, Object> props = getCommonProps(chatGroupId);
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new ChatMessageJsonDeserializer()));
     }
+    // Common properties for both consumer factories
 
     private Map<String, Object> getCommonProps(String groupId) {
         Map<String, Object> props = new HashMap<>();
@@ -53,6 +63,11 @@ public class KafkaConsumerConfig {
         return props;
     }
 
+    /**
+     * Creates a Kafka listener container factory for the Recipe entity.
+     * @return Kafka listener container factory for the Recipe entity.
+     */
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Recipe>
     kafkaListenerContainerFactory() {
@@ -61,6 +76,11 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
+
+    /**
+     * Creates a Kafka listener container factory for the ChatMessage entity.
+     * @return Kafka listener container factory for the ChatMessage entity.
+     */
     @Bean ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaChatListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();

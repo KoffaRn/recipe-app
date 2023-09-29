@@ -21,6 +21,11 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         this.sendBox = sendBox;
         this.getBox = getBox;
     }
+
+    /**
+     * This method is called when the application is ready to start
+     * @param event the event that is fired when the application is ready to start
+     */
     @Override
     public void onApplicationEvent(StageReadyEvent event) {
         Stage stage = event.getStage();

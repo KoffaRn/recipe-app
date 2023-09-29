@@ -14,11 +14,21 @@ public class KafkaTopicConfig {
     private String topic;
     @Value(value = "${spring.kafka.chat.topic-name}")
     private String topicChat;
+
+    /**
+     * Creates a topic for the Recipe entity.
+     * @return NewTopic
+     */
     @Bean
     public NewTopic createTopic() {
         return TopicBuilder.name(topic)
                 .build();
     }
+
+    /**
+     * Creates a topic for the ChatMessage entity.
+     * @return NewTopic
+     */
     @Bean public NewTopic createTopicChat() {
         return TopicBuilder.name(topicChat)
                 .build();

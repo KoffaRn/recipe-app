@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * This class is responsible for producing messages to Kafka.
+ */
 @Service
 public class KafkaProducer {
     private final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
@@ -24,7 +27,9 @@ public class KafkaProducer {
     @Value(value = "${spring.kafka.chat.topic-name}")
     private String topicNameChat;
     public void sendMessage(Recipe message) {
+        // Send a message to the Kafka topic
         CompletableFuture<SendResult<String, Recipe>> future = kafkaTemplate.send(topicName, message);
+        // Log the result of the send
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 logger.info("Sent message=[" + message +
@@ -35,8 +40,10 @@ public class KafkaProducer {
             }
         });
     }
+    // Send a message to the Kafka topic
     public void sendMessage(ChatMessage chatMessage) {
         CompletableFuture<SendResult<String, ChatMessage>> future = kafkaTemplateChat.send(topicNameChat, chatMessage);
+        // Log the result of the send
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 logger.info("Sent message=[" + chatMessage +

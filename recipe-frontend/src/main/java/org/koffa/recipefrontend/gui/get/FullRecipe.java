@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.koffa.recipefrontend.ChatWebSocketClient;
+import org.koffa.recipefrontend.chat.ChatWebSocketClient;
 import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Ingredient;
@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This class is responsible for displaying a full recipe.
+ */
 public class FullRecipe extends Application {
     private final String url;
-
     private final Recipe recipe;
     private final TextFlow chat = new TextFlow();
     private ChatWebSocketClient client;
@@ -38,9 +40,11 @@ public class FullRecipe extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        // Instantiate the client and connect to the websocket
         client = new ChatWebSocketClient(url, this);
         client.connect();
         client.subscribe(recipe.getId());
+        // Create the UI
         ScrollPane scrollPane = new ScrollPane();
         VBox root = new VBox();
         Label recipeName = new Label(recipe.getName());
@@ -74,19 +78,20 @@ public class FullRecipe extends Application {
         chatMessage = new TextField();
         chatPane.getItems().addAll(name, chatMessage);
         chatPane.setDividerPosition(0, 0.2);
-        Button sendButton = new Button("Send");
-        sendButton.setOnAction(actionEvent -> {
+        chatMessage.setOnAction(actionEvent -> {
             sendMessage();
-            chatMessage.setText("");
         });
         addDbMessages();
-        root.getChildren().addAll(recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatPane,sendButton,chat);
+        VBox chatBox = new VBox(chat, chatPane);
+        ScrollPane chatScroll = new ScrollPane();
+        chatScroll.setContent(chatBox);
+        root.getChildren().addAll(recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
         scrollPane.setContent(root);
         stage.setScene(new javafx.scene.Scene(scrollPane, 300, 300));
         stage.setTitle(recipe.getName());
         stage.show();
     }
-
+    // Add all messages from the database to the chat
     private void addDbMessages() {
         List<ChatMessage> chatMessages = getDbMessages();
         if (chatMessages == null) return;
@@ -94,17 +99,19 @@ public class FullRecipe extends Application {
             newMessage(chatMessage);
         }
     }
-
+    // Add a new message to the chat (called from the websocket and the database)
     public void newMessage(ChatMessage message) {
         String time = message.getTimestamp().toString().replaceFirst("\\.\\d*(Z)?$", "$1");
         Text text = new Text(time + "> " + message.getSender() + ": " + message.getMessage() + "\n");
         Platform.runLater(() -> chat.getChildren().add(text));
     }
+    // Send a message to the websocket
     private void sendMessage() {
         Message message = new Message();
         message.setSender(name.getText());
         message.setMessage(chatMessage.getText());
         client.send(recipe.getId(), message);
+        chatMessage.setText("");
     }
     private List<ChatMessage> getDbMessages() {
         try {

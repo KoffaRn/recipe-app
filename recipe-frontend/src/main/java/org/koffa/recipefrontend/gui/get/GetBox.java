@@ -22,8 +22,7 @@ public class GetBox extends VBox {
     Logger logger = LoggerFactory.getLogger(GetBox.class);
     @Autowired
     BeanFactory beanFactory;
-    @Value(value = "${websocket.url}")
-    private String url;
+
     private final RecipeGetter recipeGetter;
     private final SplitPane recipeCards;
     private final ButtonBar tagsBar;

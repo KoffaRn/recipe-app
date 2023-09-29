@@ -8,6 +8,10 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 public class RecipeJsonDeseriazlier extends JsonDeserializer<Recipe>  {
     private final Logger logger =LoggerFactory.getLogger(RecipeJsonDeseriazlier.class);
+
+    /**
+     * Deserializes a JSON string into a Recipe object.
+     */
     public RecipeJsonDeseriazlier() {
         super();
         this.addTrustedPackages("org.koffa.recipebackend.entity");

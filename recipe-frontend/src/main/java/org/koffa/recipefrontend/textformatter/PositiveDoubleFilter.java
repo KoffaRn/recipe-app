@@ -6,7 +6,10 @@ import javafx.scene.control.TextFormatter;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public class PositiveIntegerFilter implements UnaryOperator<TextFormatter.Change> {
+/**
+ * This class is used to filter out non-numeric characters from a text field (accepts doubles).
+ */
+public class PositiveDoubleFilter implements UnaryOperator<TextFormatter.Change> {
 
     @Override
     public TextFormatter.Change apply(TextFormatter.Change change) {

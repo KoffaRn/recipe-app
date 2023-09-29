@@ -26,6 +26,9 @@ public class MainUi extends Application {
         applicationContext.publishEvent(new StageReadyEvent(stage));
     }
 
+    /**
+     * This class is used to pass the stage to the Spring context.
+     */
     static class StageReadyEvent extends ApplicationEvent {
         public StageReadyEvent(Stage stage) {
             super(stage);

@@ -8,6 +8,10 @@ import org.koffa.recipebackend.entity.ChatMessage;
 
 public class ChatMessageJsonDeserializer extends JsonDeserializer<ChatMessage> {
     private final Logger logger = LoggerFactory.getLogger(ChatMessageJsonDeserializer.class);
+
+    /**
+     * Deserializes a JSON string into a ChatMessage object.
+     */
     public ChatMessageJsonDeserializer() {
         super();
         this.addTrustedPackages("org.koffa.recipebackend.entity");

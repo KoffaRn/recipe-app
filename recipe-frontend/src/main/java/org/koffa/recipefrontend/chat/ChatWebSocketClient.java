@@ -1,4 +1,4 @@
-package org.koffa.recipefrontend;
+package org.koffa.recipefrontend.chat;
 
 import org.koffa.recipefrontend.gui.get.FullRecipe;
 import org.koffa.recipefrontend.pojo.ChatMessage;
@@ -24,10 +24,22 @@ public class ChatWebSocketClient implements StompFrameHandler {
     private final String url;
     private final FullRecipe fullRecipe;
 
+    /**
+     * Constructor for ChatWebSocketClient
+     * @param url url of the websocket
+     * @param fullRecipe instance of FullRecipe
+     */
+
     public ChatWebSocketClient(@Value("${websocket.url}")  String url, FullRecipe fullRecipe) {
         this.url = url;
         this.fullRecipe = fullRecipe;
     }
+
+    /**
+     * Connects to the websocket
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void connect() throws ExecutionException, InterruptedException {
         WebSocketClient client = new StandardWebSocketClient();
         WebSocketStompClient stompClient = new WebSocketStompClient(client);
@@ -35,9 +47,20 @@ public class ChatWebSocketClient implements StompFrameHandler {
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
         this.stompSession = stompClient.connectAsync(url,sessionHandler).get();
     }
+
+    /**
+     * Subscribes to the websocket
+     * @param id id of the recipe to subscribe to
+     */
     public void subscribe(long id) {
         stompSession.subscribe("/topic/"+id, this);
     }
+
+    /**
+     * Sends a message to the websocket
+     * @param id id of the recipe to send to
+     * @param message message to send
+     */
     public void send(long id, Message message) {
         stompSession.send("/app/chat/"+id, message);
     }

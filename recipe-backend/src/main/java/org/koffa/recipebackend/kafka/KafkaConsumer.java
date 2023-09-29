@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is responsible for consuming messages from Kafka.
+ */
+
 @Service
 public class KafkaConsumer {
     private final RecipeService recipeService;
@@ -18,8 +22,10 @@ public class KafkaConsumer {
         this.recipeService = recipeService;
         this.chatMessageService = chatMessageService;
     }
+
     @KafkaListener(topics = "${spring.kafka.recipe.topic-name}", groupId = "${spring.kafka.recipe.group-id}")
     public void consume(Recipe recipe) {
+        // Save the recipe to the database
         try {
             recipeService.save(recipe);
             logger.info("Recipe saved to database: " + recipe);
@@ -27,8 +33,9 @@ public class KafkaConsumer {
             logger.error("Received message:  but could not be saved to database " + recipe.toString() + " " + e.getMessage());
         }
     }
-    @KafkaListener(topics = "${spring.kafka.chat.topic-name}", groupId = "${spring.kafka.chat.group-id}", containerFactory = "kafkaChatListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.chat.topic-name}", groupId = "${spring.kafka.chat.group-id}", containerFactory = "kafkaChatListenerContainerFactory") // This is the container factory for the chat messages
     public void consume(ChatMessage message) {
+        // Save the chat message to the database
         try {
             logger.info("Received message: " + message);
             chatMessageService.save(message);

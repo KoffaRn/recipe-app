@@ -20,6 +20,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/chat")
+/**
+ * This class is responsible for handling the chat messages.
+ */
 public class ChatController {
     private final KafkaProducer kafkaProducer;
     private final ChatMessageService chatMessageService;
@@ -31,6 +34,7 @@ public class ChatController {
     @MessageMapping("/chat/{recipeId}")
     @SendTo("/topic/{recipeId}")
     public ChatMessage sendMessage(@DestinationVariable long recipeId, Message message) {
+        // Create a ChatMessage object and send it to the Kafka topic
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender(message.getSender());
         chatMessage.setMessage(message.getMessage());
@@ -41,6 +45,7 @@ public class ChatController {
     }
     @GetMapping("/get/{recipeId}")
     public ResponseEntity<List<ChatMessage>> chatByRecipe(@PathVariable long recipeId) {
+        // Get all chat messages for a recipe
         try {
             return ResponseEntity.ok().body(chatMessageService.getByRecipeId(recipeId));
         }
