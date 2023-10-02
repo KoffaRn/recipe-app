@@ -11,12 +11,13 @@ It uses the following technologies:
 * Websockets
 * SQL
 
-## Table of Contents (Optional)
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Credits](#credits)
-- [License](#license)
+- [Dependencies](#dependencies)
+- [Tests](#tests)
 
 ## Installation
 
@@ -25,7 +26,6 @@ To install this project, follow these steps:
     * Java 17
     * MySQL / MariaDB
     * Kafka
-    * Maven
 2. Installing kafka
    * Download kafka from [here](https://kafka.apache.org/downloads) (binary downloads, Scala version doesn't matter for this project)
    * Extract the downloaded file
@@ -38,14 +38,14 @@ To install this project, follow these steps:
       * The application will create the topics automatically and use the settings in your kafka config/server.properties file
       * For better scalability and performance, you can create multiple partitions for the topics. This can be done by modifying/adding the following lines to your config/server.properties file:
       * `num.partitions=N` where N is the number of partitions you want to create (default is 1, recommended is 3 or more)
-      * You could also run multiple kafka brokers on the same machine by copying the server.properties file and modifying the following lines in your file:
+      * You could also run multiple kafka brokers for better redundancy, either on multiple servers or on the same machine by copying the server.properties file and modifying the following lines in your file:
       * `broker.id=N` where N is the broker id, each broker must have a unique id
       * `listeners=PLAINTEXT://:9092` where 9092 is the port number, each broker must have a unique port number
       * `log.dirs=/tmp/kafka-logs-N` where N is the broker id, each broker must have a unique log directory
       * If you do run multiple brokers you must also add them to the application.properties file in both recipe-backend and recipe-frontend in the spring.kafka.bootstrap-servers property, for example: `spring.kafka.bootstrap-servers=localhost:9092,localhost:9093,localhost:9094`
 3. Installing MySQL / MariaDB
-   * MariaDB is open source and can be downloaded from [here](https://mariadb.org/download/)
-   * MySQL is not open source and can be downloaded from [here](https://www.mysql.com/downloads/)
+   * MariaDB is fully open source and can be downloaded from [here](https://mariadb.org/download/)
+   * MySQL has open source community edition and can be downloaded from [here](https://www.mysql.com/downloads/)
    * Install the database and create a database called `recipe`
    * Add a user, for example `mysql` with password `password` and grant all privileges on the `recipe` database to the user
    * If you want to use a different user or password, you can change the settings in the application.properties file recipe-backend/resources/
@@ -58,7 +58,7 @@ To install this project, follow these steps:
      * Linux/Mac: Make sure you have the execute permission on the mvnw file: `chmod +x mvnw`
      * Run `./mvnw spring-boot:run`
      * Windows: Run `.\mvnww.cmd spring-boot:run`
-   * Open a terminal in the recipe-frontend folder
+   * Open a new terminal or tab in the recipe-frontend folder
      * Linux/Mac: Make sure you have the execute permission on the mvnw file: `chmod +x mvnw`
      * Run `./mvnw spring-boot:run`
      * Windows: Run `.\mvnww.cmd spring-boot:run`
@@ -73,13 +73,18 @@ To install this project, follow these steps:
 ![View recipe](assets/images/fullrecipe.png)
 
 ## Credits
-
-List your collaborators, if any, with links to their GitHub profiles.
-* [member 1](https://github.com/person1)
-* [member 2](https://github.com/person1)
+* On-site gang, code / life discussions and feedback:
+  * [Ellen](https://github.com/EllenHalv)
+  * [Emil](https://github.com/Emilsivertsson)
+  * [Johan](https://github.com/JohRome)
+  * [Kristian](https://github.com/Bremmster)
+  * [Wakana](https://github.com/83wakasug)
+  * [Cristoffer](https://github.com/Cristoffer85)
+* [Diff blue](https://www.diffblue.com/) for initial test code
+* [ChatGPT](https://chat.openai.com/) for bug hunting and code feedback
 
 ## Dependencies
-See the pom.xml files in the recipe-backend and recipe-frontend folders for the dependencies
+See the [main pom.xml](pom.xml), [recipe-backend pom.xml](recipe-backend/pom.xml) and [recipe-frontend pom.xml](recipe-frontend/pom.xml) files for dependencies
 
 ## Tests
 

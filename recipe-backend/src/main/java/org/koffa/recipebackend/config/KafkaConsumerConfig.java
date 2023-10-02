@@ -23,32 +23,35 @@ public class KafkaConsumerConfig {
     private String bootstrapAddress;
     @Value(value = "${spring.kafka.recipe.group-id}")
     private String groupId;
-    @Value(value = "${spring.kafka.chat.group-id}")
-    private String chatGroupId;
 
     /**
      * Creates a consumer factory for the Recipe entity.
-     * @return
+     * @return Consumer factory for the Recipe entity.
      */
     @Bean
-    public ConsumerFactory<String, Recipe> consumerFactory() {
-        Map<String, Object> props = getCommonProps(groupId);
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier()));
+    public ConsumerFactory<String, Recipe> recipeConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                getCommonProps(),
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier())
+        );
     }
 
     /**
      * Creates a consumer factory for the ChatMessage entity.
-     * @return
+     * @return Consumer factory for the ChatMessage entity.
      */
     @Bean
     public ConsumerFactory<String, ChatMessage> chatConsumerFactory() {
-        getCommonProps(chatGroupId);
-        Map<String, Object> props = getCommonProps(chatGroupId);
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(new ChatMessageJsonDeserializer()));
+        return new DefaultKafkaConsumerFactory<>(
+                getCommonProps(),
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new ChatMessageJsonDeserializer())
+        );
     }
     // Common properties for both consumer factories
 
-    private Map<String, Object> getCommonProps(String groupId) {
+    private Map<String, Object> getCommonProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -70,10 +73,10 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Recipe>
-    kafkaListenerContainerFactory() {
+    kafkaRecipeListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Recipe> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(recipeConsumerFactory());
         return factory;
     }
 

@@ -23,7 +23,9 @@ public class KafkaConsumer {
         this.chatMessageService = chatMessageService;
     }
 
-    @KafkaListener(topics = "${spring.kafka.recipe.topic-name}", groupId = "${spring.kafka.recipe.group-id}")
+    @KafkaListener(topics = "${spring.kafka.recipe.topic-name}",
+            groupId = "${spring.kafka.recipe.group-id}",
+            containerFactory = "kafkaRecipeListenerContainerFactory") // This is the container factory for the recipe messages
     public void consume(Recipe recipe) {
         // Save the recipe to the database
         try {
@@ -34,7 +36,7 @@ public class KafkaConsumer {
         }
     }
     @KafkaListener(topics = "${spring.kafka.chat.topic-name}",
-            groupId = "${spring.kafka.chat.group-id}",
+            groupId = "${spring.kafka.recipe.group-id}",
             containerFactory = "kafkaChatListenerContainerFactory") // This is the container factory for the chat messages
     public void consume(ChatMessage message) {
         // Save the chat message to the database
