@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > KafkaConsumerConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.koffa.recipebackend.config</a>
+</div>
+
+<h1>Coverage Summary for Class: KafkaConsumerConfig (org.koffa.recipebackend.config)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KafkaConsumerConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">KafkaConsumerConfig$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">KafkaConsumerConfig$$SpringCGLIB$$1</td>
+  </tr>
+  <tr>
+    <td class="name">KafkaConsumerConfig$$SpringCGLIB$$2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.koffa.recipebackend.config;
+&nbsp;
+&nbsp;import org.apache.kafka.clients.consumer.ConsumerConfig;
+&nbsp;import org.apache.kafka.common.serialization.StringDeserializer;
+&nbsp;import org.koffa.recipebackend.entity.ChatMessage;
+&nbsp;import org.koffa.recipebackend.entity.Recipe;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.kafka.annotation.EnableKafka;
+&nbsp;import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+&nbsp;import org.springframework.kafka.core.ConsumerFactory;
+&nbsp;import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+&nbsp;import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@EnableKafka
+&nbsp;@Configuration
+<b class="fc">&nbsp;public class KafkaConsumerConfig {</b>
+&nbsp;    @Value(value = &quot;${spring.kafka.bootstrap-servers}&quot;)
+&nbsp;    private String bootstrapAddress;
+&nbsp;    @Value(value = &quot;${spring.kafka.recipe.group-id}&quot;)
+&nbsp;    private String groupId;
+&nbsp;    @Value(value = &quot;${spring.kafka.chat.group-id}&quot;)
+&nbsp;    private String chatGroupId;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a consumer factory for the Recipe entity.
+&nbsp;     * @return
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public ConsumerFactory&lt;String, Recipe&gt; consumerFactory() {
+<b class="fc">&nbsp;        Map&lt;String, Object&gt; props = getCommonProps(groupId);</b>
+<b class="fc">&nbsp;        return new DefaultKafkaConsumerFactory&lt;&gt;(props, new StringDeserializer(), new ErrorHandlingDeserializer&lt;&gt;(new RecipeJsonDeseriazlier()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a consumer factory for the ChatMessage entity.
+&nbsp;     * @return
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public ConsumerFactory&lt;String, ChatMessage&gt; chatConsumerFactory() {
+<b class="fc">&nbsp;        getCommonProps(chatGroupId);</b>
+<b class="fc">&nbsp;        Map&lt;String, Object&gt; props = getCommonProps(chatGroupId);</b>
+<b class="fc">&nbsp;        return new DefaultKafkaConsumerFactory&lt;&gt;(props, new StringDeserializer(), new ErrorHandlingDeserializer&lt;&gt;(new ChatMessageJsonDeserializer()));</b>
+&nbsp;    }
+&nbsp;    // Common properties for both consumer factories
+&nbsp;
+&nbsp;    private Map&lt;String, Object&gt; getCommonProps(String groupId) {
+<b class="fc">&nbsp;        Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        props.put(</b>
+&nbsp;                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+&nbsp;                bootstrapAddress);
+<b class="fc">&nbsp;        props.put(</b>
+&nbsp;                ConsumerConfig.GROUP_ID_CONFIG,
+&nbsp;                groupId);
+<b class="fc">&nbsp;        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,</b>
+<b class="fc">&nbsp;                StringDeserializer.class.getName());</b>
+<b class="fc">&nbsp;        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,</b>
+<b class="fc">&nbsp;                ErrorHandlingDeserializer.class.getName());</b>
+<b class="fc">&nbsp;        return props;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a Kafka listener container factory for the Recipe entity.
+&nbsp;     * @return Kafka listener container factory for the Recipe entity.
+&nbsp;     */
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public ConcurrentKafkaListenerContainerFactory&lt;String, Recipe&gt;
+&nbsp;    kafkaListenerContainerFactory() {
+<b class="fc">&nbsp;        ConcurrentKafkaListenerContainerFactory&lt;String, Recipe&gt; factory =</b>
+&nbsp;                new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+<b class="fc">&nbsp;        factory.setConsumerFactory(consumerFactory());</b>
+<b class="fc">&nbsp;        return factory;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a Kafka listener container factory for the ChatMessage entity.
+&nbsp;     * @return Kafka listener container factory for the ChatMessage entity.
+&nbsp;     */
+&nbsp;    @Bean ConcurrentKafkaListenerContainerFactory&lt;String, ChatMessage&gt; kafkaChatListenerContainerFactory() {
+<b class="fc">&nbsp;        ConcurrentKafkaListenerContainerFactory&lt;String, ChatMessage&gt; factory =</b>
+&nbsp;                new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+<b class="fc">&nbsp;        factory.setConsumerFactory(chatConsumerFactory());</b>
+<b class="fc">&nbsp;        return factory;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-02 10:04</div>
+</div>
+</body>
+</html>
