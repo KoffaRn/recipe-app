@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>recipe-backend</module>
+        <module>recipe-frontend</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

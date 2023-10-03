@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > KafkaConsumer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.koffa.recipebackend.kafka</a>
+</div>
+
+<h1>Coverage Summary for Class: KafkaConsumer (org.koffa.recipebackend.kafka)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KafkaConsumer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (4/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.koffa.recipebackend.kafka;
+&nbsp;
+&nbsp;import org.koffa.recipebackend.entity.ChatMessage;
+&nbsp;import org.koffa.recipebackend.entity.Recipe;
+&nbsp;import org.koffa.recipebackend.service.ChatMessageService;
+&nbsp;import org.koffa.recipebackend.service.RecipeService;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.kafka.annotation.KafkaListener;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class is responsible for consuming messages from Kafka.
+&nbsp; */
+&nbsp;
+&nbsp;@Service
+&nbsp;public class KafkaConsumer {
+&nbsp;    private final RecipeService recipeService;
+&nbsp;    private final ChatMessageService chatMessageService;
+<b class="fc">&nbsp;    private final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);</b>
+<b class="fc">&nbsp;    public KafkaConsumer(RecipeService recipeService, ChatMessageService chatMessageService) {</b>
+<b class="fc">&nbsp;        this.recipeService = recipeService;</b>
+<b class="fc">&nbsp;        this.chatMessageService = chatMessageService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @KafkaListener(topics = &quot;${spring.kafka.recipe.topic-name}&quot;, groupId = &quot;${spring.kafka.recipe.group-id}&quot;)
+&nbsp;    public void consume(Recipe recipe) {
+&nbsp;        // Save the recipe to the database
+&nbsp;        try {
+<b class="nc">&nbsp;            recipeService.save(recipe);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Recipe saved to database: &quot; + recipe);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Received message:  but could not be saved to database &quot; + recipe.toString() + &quot; &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;    @KafkaListener(topics = &quot;${spring.kafka.chat.topic-name}&quot;,
+&nbsp;            groupId = &quot;${spring.kafka.chat.group-id}&quot;,
+&nbsp;            containerFactory = &quot;kafkaChatListenerContainerFactory&quot;) // This is the container factory for the chat messages
+&nbsp;    public void consume(ChatMessage message) {
+&nbsp;        // Save the chat message to the database
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Received message: &quot; + message);</b>
+<b class="nc">&nbsp;            chatMessageService.save(message);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(e.getMessage());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-02 10:04</div>
+</div>
+</body>
+</html>

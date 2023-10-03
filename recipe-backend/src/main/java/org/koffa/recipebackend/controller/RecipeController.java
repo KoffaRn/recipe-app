@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class is responsible for handling the Recipe.
+ */
 @RestController
 @RequestMapping("api/v1/recipe")
 public class RecipeController {
@@ -24,6 +27,7 @@ public class RecipeController {
     }
     @GetMapping("/get")
     public ResponseEntity<List<Recipe>> getAll() {
+        // Get all recipes
         try {
             return ResponseEntity.ok().body(repository.findAll());
         }
@@ -34,6 +38,7 @@ public class RecipeController {
     }
     @GetMapping("/get/tag")
     public ResponseEntity<List<String>> getAllTags() {
+        // Get all recipe tags
         try {
             return new ResponseEntity<>(repository.findAllUniqueTags(), HttpStatus.OK);
         }
@@ -44,6 +49,7 @@ public class RecipeController {
     }
     @GetMapping("/get/tag/{tag}")
     public ResponseEntity<List<Recipe>> getAllByTag(@PathVariable String tag) {
+        // Get all recipes by tag
         try {
             return ResponseEntity.ok().body(repository.findAllByTag(tag));
         }
@@ -54,6 +60,7 @@ public class RecipeController {
     }
     @GetMapping("/get/{id}")
     public ResponseEntity<Recipe> getOne(@PathVariable long id) {
+        // Get one recipe by id
         Optional<Recipe> recipe = repository.findById(id);
         if(recipe.isPresent()) {
             return new ResponseEntity<>(recipe.get(), HttpStatus.OK);
@@ -65,6 +72,7 @@ public class RecipeController {
 
     @PostMapping("/publish")
     public ResponseEntity<String> publish(@RequestBody Recipe message) {
+        // Publish a recipe to the Kafka topic
         try {
             kafkaProducer.sendMessage(message);
             return ResponseEntity.ok().body("Message sent to kafka: " + message);
