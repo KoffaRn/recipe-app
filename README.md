@@ -92,6 +92,7 @@ The tests can be found in the recipe-backend/src/test/java/org/koffa/recipebacke
 
 [Test report](htmlReport/index.html)
 
+## Discussion
 ---
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![java](https://img.shields.io/github/languages/top/KoffaRn/recipe-app)

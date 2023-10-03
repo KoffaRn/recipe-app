@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -119,7 +120,10 @@ public class FullRecipe extends Application {
     }
     private List<ChatMessage> getDbMessages() {
         try {
-            return apiHandler.getRecipeChatMessages(recipe.getId());
+            List<ChatMessage> messages = apiHandler.getRecipeChatMessages(recipe.getId());
+            //Sort by timestamp (see ChatMessages)
+            Collections.sort(messages);
+            return messages;
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return null;
