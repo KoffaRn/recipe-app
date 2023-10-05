@@ -2,7 +2,6 @@ package org.koffa.recipefrontend.gui.get;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -33,50 +31,52 @@ public class GetBox extends VBox {
     private ButtonBar tagsBar;
 
     public GetBox()  {
+        // If the APIHandler cannot be instantiated, show an error message
         if(apiHandler == null) {
             showApiError();
-
-        } else {
+            return;
+        }
+        // If the APIHandler cannot get content from the API, show an error message
+        try {
             getContentFromApi();
+        } catch (IOException e) {
+            showApiError();
         }
     }
 
     private void showApiError() {
         TextFlow errorMessage = new TextFlow();
-        Text errorText = new Text("Could not create API instance, make sure URL is configured and backend up and running.");
+        Text errorText = new Text("Could not create API instance, make sure URL is configured and backend up and running.\n" +
+                "Then restart the application");
         errorText.setFill(Color.RED);
         errorMessage.getChildren().add(errorText);
         logger.error("ApiHandler is null");
         this.getChildren().add(errorMessage);
     }
 
-    private void getContentFromApi() {
+    private void getContentFromApi() throws IOException {
         Button allRecipesButton = new Button("All recipes");
 
         this.tagsBar = new ButtonBar();
         tagsBar.getButtons().add(allRecipesButton);
         this.recipeGetter = apiHandler;
-        try {
-            populateTags(apiHandler.getAllTags());
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-
+        populateTags(apiHandler.getAllTags());
         this.recipeCards = new SplitPane();
         recipeCards.setOrientation(javafx.geometry.Orientation.VERTICAL);
-
         this.getChildren().addAll(tagsBar, recipeCards);
 
         allRecipesButton.setOnAction(event -> {
-            try {
                 tagsBar.getButtons().clear();
                 recipeCards.getItems().clear();
                 tagsBar.getButtons().add(allRecipesButton);
+            try {
                 populateTags(apiHandler.getAllTags());
                 populateList(apiHandler.getAllRecipes(), recipeCards);
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                throw new RuntimeException(e);
             }
+
+
         });
     }
 
@@ -94,7 +94,7 @@ public class GetBox extends VBox {
                 recipeCards.getItems().clear();
                 populateList(recipeGetter.getRecipesByTag(tag), recipeCards);
             } catch (IOException e) {
-                e.printStackTrace();
+                showApiError();
             }
         });
         return tagButton;
