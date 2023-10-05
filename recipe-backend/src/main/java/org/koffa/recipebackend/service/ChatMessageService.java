@@ -4,6 +4,8 @@ import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.repository.ChatMessageRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,6 +18,8 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
     }
     public List<ChatMessage> getByRecipeId(long recipeId) {
-        return chatMessageRepository.findByRecipeId(recipeId);
+        List<ChatMessage> messages = chatMessageRepository.findByRecipeId(recipeId);
+        Collections.sort(messages);
+        return messages;
     }
 }

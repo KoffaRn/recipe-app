@@ -2,8 +2,12 @@ package org.koffa.recipefrontend.gui.get;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.koffa.recipefrontend.api.ApiHandler;
 import org.koffa.recipefrontend.api.RecipeGetter;
 import org.koffa.recipefrontend.pojo.Recipe;
@@ -22,18 +26,41 @@ public class GetBox extends VBox {
     Logger logger = LoggerFactory.getLogger(GetBox.class);
     @Autowired
     BeanFactory beanFactory;
+    @Autowired
+    ApiHandler apiHandler;
+    private RecipeGetter recipeGetter;
+    private SplitPane recipeCards;
+    private ButtonBar tagsBar;
 
-    private final RecipeGetter recipeGetter;
-    private final SplitPane recipeCards;
-    private final ButtonBar tagsBar;
+    public GetBox()  {
+        if(apiHandler == null) {
+            showApiError();
 
-    public GetBox(ApiHandler apiHandler) throws IOException {
+        } else {
+            getContentFromApi();
+        }
+    }
+
+    private void showApiError() {
+        TextFlow errorMessage = new TextFlow();
+        Text errorText = new Text("Could not create API instance, make sure URL is configured and backend up and running.");
+        errorText.setFill(Color.RED);
+        errorMessage.getChildren().add(errorText);
+        logger.error("ApiHandler is null");
+        this.getChildren().add(errorMessage);
+    }
+
+    private void getContentFromApi() {
         Button allRecipesButton = new Button("All recipes");
 
         this.tagsBar = new ButtonBar();
         tagsBar.getButtons().add(allRecipesButton);
         this.recipeGetter = apiHandler;
-        populateTags(apiHandler.getAllTags());
+        try {
+            populateTags(apiHandler.getAllTags());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
 
         this.recipeCards = new SplitPane();
         recipeCards.setOrientation(javafx.geometry.Orientation.VERTICAL);

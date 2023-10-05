@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-public class ChatMessage {
+public class ChatMessage implements Comparable<ChatMessage> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -15,4 +15,9 @@ public class ChatMessage {
     private String sender;
     private String message;
     private Long recipeId;
+
+    @Override
+    public int compareTo(ChatMessage o) {
+        return timestamp.compareTo(o.getTimestamp());
+    }
 }
