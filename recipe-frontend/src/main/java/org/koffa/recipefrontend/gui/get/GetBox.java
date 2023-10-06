@@ -33,24 +33,24 @@ public class GetBox extends VBox {
     public GetBox()  {
         // If the APIHandler cannot be instantiated, show an error message
         if(apiHandler == null) {
-            showApiError();
+            showApiError("Api handler could not be instantiated, make sure URL is configured and backend up and running.");
             return;
         }
         // If the APIHandler cannot get content from the API, show an error message
         try {
             getContentFromApi();
         } catch (IOException e) {
-            showApiError();
+            showApiError("Could not get content from API, make sure URL is configured and backend up and running > \n" + e.getMessage());
         }
     }
 
-    private void showApiError() {
+    private void showApiError(String message) {
         TextFlow errorMessage = new TextFlow();
-        Text errorText = new Text("Could not create API instance, make sure URL is configured and backend up and running.\n" +
-                "Then restart the application");
+        Text errorText = new Text(message);
         errorText.setFill(Color.RED);
         errorMessage.getChildren().add(errorText);
         logger.error("ApiHandler is null");
+        this.getChildren().removeAll();
         this.getChildren().add(errorMessage);
     }
 
@@ -73,7 +73,7 @@ public class GetBox extends VBox {
                 populateTags(apiHandler.getAllTags());
                 populateList(apiHandler.getAllRecipes(), recipeCards);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                showApiError("Could not get content from API, make sure URL is configured and backend up and running > \n" + e.getMessage());
             }
 
 
@@ -94,7 +94,7 @@ public class GetBox extends VBox {
                 recipeCards.getItems().clear();
                 populateList(recipeGetter.getRecipesByTag(tag), recipeCards);
             } catch (IOException e) {
-                showApiError();
+                showApiError("Could not get content from API, make sure URL is configured and backend up and running > \n " + e.getMessage());
             }
         });
         return tagButton;
