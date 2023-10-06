@@ -37,8 +37,8 @@ public class ChatWebSocketClient implements StompFrameHandler {
 
     /**
      * Connects to the websocket
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @throws ExecutionException when the execution fails
+     * @throws InterruptedException when the execution is interrupted
      */
     public void connect() throws ExecutionException, InterruptedException {
         WebSocketClient client = new StandardWebSocketClient();

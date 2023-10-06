@@ -57,7 +57,7 @@ class RecipeControllerTest {
      */
     @Test
     void testGetAllByTag() throws Exception {
-        when(recipeRepository.findAllByTag(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        when(recipeRepository.findAllByTag(Mockito.any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/v1/recipe/get/tag/{tag}", "Tag");
         MockMvcBuilders.standaloneSetup(recipeController)
                 .build()
@@ -73,7 +73,7 @@ class RecipeControllerTest {
     @Test
     void testGetAllByTag2() throws Exception {
         when(recipeRepository.findAllUniqueTags()).thenReturn(new ArrayList<>());
-        when(recipeRepository.findAllByTag(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        when(recipeRepository.findAllByTag(Mockito.any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/v1/recipe/get/tag/{tag}", "",
                 "Uri Variables");
         MockMvcBuilders.standaloneSetup(recipeController)

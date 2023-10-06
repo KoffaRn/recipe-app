@@ -24,16 +24,7 @@ public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter
     public String send(Recipe recipe) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/publish").openConnection();
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
-        connection.getOutputStream().write(recipe.toJson().getBytes());
-        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-        StringBuilder response = new StringBuilder();
-        while(br.ready()) {
-            response.append(br.readLine());
-        }
-        connection.disconnect();
-        return response.toString();
+        return doOutput(recipe, connection).toString();
     }
 
     @Override
@@ -87,6 +78,10 @@ public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter
     public Recipe updateRecipe(Recipe recipe) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/update/" + recipe.getId()).openConnection();
         connection.setRequestMethod("PUT");
+        return Recipe.fromJson(doOutput(recipe,connection).toString());
+    }
+
+    private StringBuilder doOutput(Recipe recipe, HttpURLConnection connection) throws IOException {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
         connection.getOutputStream().write(recipe.toJson().getBytes());
@@ -96,8 +91,9 @@ public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter
             response.append(br.readLine());
         }
         connection.disconnect();
-        return Recipe.fromJson(response.toString());
+        return response;
     }
+
     public void deleteRecipe(long id) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/delete/" + id).openConnection();
         connection.setRequestMethod("DELETE");

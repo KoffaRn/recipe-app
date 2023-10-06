@@ -42,7 +42,7 @@ class ChatMessageServiceTest {
         chatMessage.setRecipeId(1L);
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
-        when(chatMessageRepository.save(Mockito.<ChatMessage>any())).thenReturn(chatMessage);
+        when(chatMessageRepository.save(Mockito.any())).thenReturn(chatMessage);
 
         ChatMessage chatMessage2 = new ChatMessage();
         chatMessage2.setId(1L);
@@ -51,7 +51,7 @@ class ChatMessageServiceTest {
         chatMessage2.setSender("Sender");
         chatMessage2.setTimestamp(mock(Timestamp.class));
         chatMessageService.save(chatMessage2);
-        verify(chatMessageRepository).save(Mockito.<ChatMessage>any());
+        verify(chatMessageRepository).save(Mockito.any());
         assertEquals(1L, chatMessage2.getId());
         assertEquals("Sender", chatMessage2.getSender());
         assertEquals(1L, chatMessage2.getRecipeId().longValue());

@@ -3,8 +3,6 @@ package org.koffa.recipebackend.service;
 import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.repository.ChatMessageRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

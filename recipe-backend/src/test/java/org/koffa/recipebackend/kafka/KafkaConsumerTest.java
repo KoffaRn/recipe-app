@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +39,7 @@ class KafkaConsumerTest {
      */
     @Test
     void testConsume() {
-        doNothing().when(chatMessageService).save(Mockito.<ChatMessage>any());
+        doNothing().when(chatMessageService).save(Mockito.any());
 
         ChatMessage message = new ChatMessage();
         message.setId(1L);
@@ -49,7 +48,7 @@ class KafkaConsumerTest {
         message.setSender("Sender");
         message.setTimestamp(mock(Timestamp.class));
         kafkaConsumer.consume(message);
-        verify(chatMessageService).save(Mockito.<ChatMessage>any());
+        verify(chatMessageService).save(Mockito.any());
         assertEquals(1L, message.getId());
         assertEquals("Sender", message.getSender());
         assertEquals(1L, message.getRecipeId().longValue());
@@ -69,7 +68,7 @@ class KafkaConsumerTest {
         recipe.setName("Name");
         recipe.setSteps(new ArrayList<>());
         recipe.setTags(new ArrayList<>());
-        when(recipeService.save(Mockito.<Recipe>any())).thenReturn(recipe);
+        when(recipeService.save(Mockito.any())).thenReturn(recipe);
 
         Recipe recipe2 = new Recipe();
         recipe2.setDescription("The characteristics of someone or something");
@@ -79,7 +78,7 @@ class KafkaConsumerTest {
         recipe2.setSteps(new ArrayList<>());
         recipe2.setTags(new ArrayList<>());
         kafkaConsumer.consume(recipe2);
-        verify(recipeService).save(Mockito.<Recipe>any());
+        verify(recipeService).save(Mockito.any());
         assertEquals("The characteristics of someone or something", recipe2.getDescription());
         assertEquals(ingredients, recipe2.getTags());
         assertEquals(ingredients, recipe2.getSteps());
@@ -100,14 +99,14 @@ class KafkaConsumerTest {
         recipe.setName("Name");
         recipe.setSteps(new ArrayList<>());
         recipe.setTags(new ArrayList<>());
-        when(recipeService.save(Mockito.<Recipe>any())).thenReturn(recipe);
+        when(recipeService.save(Mockito.any())).thenReturn(recipe);
         Recipe recipe2 = mock(Recipe.class);
-        doNothing().when(recipe2).setDescription(Mockito.<String>any());
+        doNothing().when(recipe2).setDescription(Mockito.any());
         doNothing().when(recipe2).setId(Mockito.<Long>any());
-        doNothing().when(recipe2).setIngredients(Mockito.<List<Ingredient>>any());
-        doNothing().when(recipe2).setName(Mockito.<String>any());
-        doNothing().when(recipe2).setSteps(Mockito.<List<String>>any());
-        doNothing().when(recipe2).setTags(Mockito.<List<String>>any());
+        doNothing().when(recipe2).setIngredients(Mockito.any());
+        doNothing().when(recipe2).setName(Mockito.any());
+        doNothing().when(recipe2).setSteps(Mockito.any());
+        doNothing().when(recipe2).setTags(Mockito.any());
         recipe2.setDescription("The characteristics of someone or something");
         recipe2.setId(1L);
         recipe2.setIngredients(new ArrayList<>());
@@ -115,13 +114,13 @@ class KafkaConsumerTest {
         recipe2.setSteps(new ArrayList<>());
         recipe2.setTags(new ArrayList<>());
         kafkaConsumer.consume(recipe2);
-        verify(recipeService).save(Mockito.<Recipe>any());
-        verify(recipe2).setDescription(Mockito.<String>any());
+        verify(recipeService).save(Mockito.any());
+        verify(recipe2).setDescription(Mockito.any());
         verify(recipe2).setId(Mockito.<Long>any());
-        verify(recipe2).setIngredients(Mockito.<List<Ingredient>>any());
-        verify(recipe2).setName(Mockito.<String>any());
-        verify(recipe2).setSteps(Mockito.<List<String>>any());
-        verify(recipe2).setTags(Mockito.<List<String>>any());
+        verify(recipe2).setIngredients(Mockito.any());
+        verify(recipe2).setName(Mockito.any());
+        verify(recipe2).setSteps(Mockito.any());
+        verify(recipe2).setTags(Mockito.any());
     }
 }
 
