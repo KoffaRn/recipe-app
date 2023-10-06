@@ -103,6 +103,8 @@ public class FullRecipe extends Application {
         chatScroll.setMaxHeight(200);
         // Scroll to bottom of chat when new message is added
         chatScroll.vvalueProperty().bind(chat.heightProperty());
+
+        // Add all the UI elements to the root
         root.getChildren().addAll(buttonBar, recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
         scrollPane.setContent(root);
         stage.setScene(new javafx.scene.Scene(scrollPane, 400, 500));
