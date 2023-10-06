@@ -1,7 +1,6 @@
 package org.koffa.recipefrontend.config;
 
 import org.koffa.recipefrontend.api.ApiHandler;
-import org.koffa.recipefrontend.api.DefaultApiHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
