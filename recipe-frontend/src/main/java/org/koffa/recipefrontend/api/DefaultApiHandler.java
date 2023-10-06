@@ -4,10 +4,16 @@ import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Recipe;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultApiHandler extends ApiHandler{
+    public DefaultApiHandler(URL url) throws MalformedURLException {
+        super(url);
+    }
+
     @Override
     public String send(Recipe recipe) throws IOException {
         return null;

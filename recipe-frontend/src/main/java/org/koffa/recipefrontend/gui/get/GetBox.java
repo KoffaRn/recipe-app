@@ -13,7 +13,6 @@ import org.koffa.recipefrontend.pojo.Recipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,22 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 @Component
 public class GetBox extends VBox {
-    Logger logger = LoggerFactory.getLogger(GetBox.class);
-    @Autowired
-    BeanFactory beanFactory;
-    @Autowired
-    ApiHandler apiHandler;
-    private RecipeGetter recipeGetter;
+    private final Logger logger = LoggerFactory.getLogger(GetBox.class);
+    private final BeanFactory beanFactory;
+    private final ApiHandler apiHandler;
     private SplitPane recipeCards;
     private ButtonBar tagsBar;
 
-    public GetBox()  {
-        // If the APIHandler cannot be instantiated, show an error message
-        if(apiHandler == null) {
-            showApiError("Api handler could not be instantiated, make sure URL is configured and backend up and running.");
-            return;
-        }
-        // If the APIHandler cannot get content from the API, show an error message
+    public GetBox(ApiHandler apiHandler, BeanFactory beanFactory)  {
+        this.beanFactory = beanFactory;
+        this.apiHandler = apiHandler;
         try {
             getContentFromApi();
         } catch (IOException e) {
@@ -55,11 +47,10 @@ public class GetBox extends VBox {
     }
 
     private void getContentFromApi() throws IOException {
-        Button allRecipesButton = new Button("All recipes");
+        Button allRecipesButton = new Button("Refresh");
 
         this.tagsBar = new ButtonBar();
         tagsBar.getButtons().add(allRecipesButton);
-        this.recipeGetter = apiHandler;
         populateTags(apiHandler.getAllTags());
         this.recipeCards = new SplitPane();
         recipeCards.setOrientation(javafx.geometry.Orientation.VERTICAL);
@@ -82,7 +73,7 @@ public class GetBox extends VBox {
 
     private void populateTags(ArrayList<String> tags) {
         for(String tag : tags) {
-            Button tagButton = getButton(recipeGetter, tag);
+            Button tagButton = getButton(apiHandler, tag);
             tagsBar.getButtons().add(tagButton);
         }
     }

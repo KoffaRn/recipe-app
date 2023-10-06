@@ -80,4 +80,25 @@ public class RecipeController {
             return ResponseEntity.internalServerError().body("Error sending message: " + e.getMessage());
         }
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Recipe> update(@PathVariable long id, @RequestBody Recipe recipe) {
+        Optional<Recipe> recipeData = repository.findById(id);
+        if(recipeData.isPresent()) {
+            return new ResponseEntity<>(repository.save(recipe), HttpStatus.OK);
+        } else {
+            logger.error("Error updating recipe, no recipe with " + id);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable long id) {
+        // Delete a recipe
+        try {
+            repository.deleteById(id);
+            return ResponseEntity.ok().body("Recipe deleted");
+        } catch (Exception e) {
+            logger.error("Error deleting recipe: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Error deleting recipe: " + e.getMessage());
+        }
+    }
 }

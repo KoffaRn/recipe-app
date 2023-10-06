@@ -2,8 +2,11 @@ package org.koffa.recipefrontend.gui.get;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -13,10 +16,12 @@ import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Ingredient;
 import org.koffa.recipefrontend.pojo.Message;
 import org.koffa.recipefrontend.pojo.Recipe;
+import org.koffa.recipefrontend.textformatter.PositiveDoubleFilter;
 import org.springframework.beans.factory.annotation.Value;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,52 +29,60 @@ import java.util.List;
  * This class is responsible for displaying a full recipe.
  */
 public class FullRecipe extends Application {
-    private final String url;
+    private final String chatUrl;
     private final Recipe recipe;
     private final TextFlow chat = new TextFlow();
     private ChatWebSocketClient client;
     private TextField chatMessage = new TextField();
     private TextField name = new TextField("Name");
     private final ApiHandler apiHandler;
+    private final SplitPane ingredients = new SplitPane();
+    private TextField recipeName;
+    private TextField recipeDescription;
+    private final SplitPane steps = new SplitPane();
+    private final SplitPane tags = new SplitPane();
 
-    public FullRecipe(ApiHandler apiHandler, Recipe recipe, @Value(value = "${websocket.url}") String url) {
+
+    public FullRecipe(ApiHandler apiHandler, Recipe recipe, @Value(value = "${websocket.url}") String chatUrl) {
         this.apiHandler = apiHandler;
         this.recipe = recipe;
-        this.url = url;
+        this.chatUrl = chatUrl;
     }
 
 
     @Override
     public void start(Stage stage) throws Exception {
         // Instantiate the client and connect to the websocket
-        client = new ChatWebSocketClient(url, this);
+        client = new ChatWebSocketClient(chatUrl, this);
         client.connect();
         client.subscribe(recipe.getId());
         // Create the UI
+        ButtonBar buttonBar = new ButtonBar();
+        Button updateButton = new Button("Update");
+        Button deleteButton = new Button("Delete");
+        buttonBar.getButtons().addAll(updateButton, deleteButton);
         ScrollPane scrollPane = new ScrollPane();
         VBox root = new VBox();
-        Label recipeName = new Label(recipe.getName());
-        Label recipeDescription = new Label(recipe.getDescription());
-        SplitPane ingredients = new SplitPane();
-        ingredients.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        recipeName = new TextField(recipe.getName());
+        recipeDescription = new TextField(recipe.getDescription());
+        ingredients.setOrientation(Orientation.VERTICAL);
         for(Ingredient ingredient : recipe.getIngredients()) {
-            Label ingredientName = new Label(ingredient.getName());
-            Label ingredientAmount = new Label(ingredient.getAmount()+"");
-            Label ingredientUnit = new Label(ingredient.getUnit());
+            TextField ingredientName = new TextField(ingredient.getName());
+            TextField ingredientAmount = new TextField(ingredient.getAmount()+"");
+            ingredientAmount.setTextFormatter(new TextFormatter<>(new PositiveDoubleFilter()));
+            TextField ingredientUnit = new TextField(ingredient.getUnit());
             VBox ingredientBox = new VBox();
             ingredientBox.getChildren().addAll(ingredientName, ingredientAmount, ingredientUnit);
             ingredients.getItems().add(ingredientBox);
         }
-        SplitPane steps = new SplitPane();
         steps.setOrientation(javafx.geometry.Orientation.VERTICAL);
         for(String step : recipe.getSteps()) {
-            Label instructionLabel = new Label(step);
+            TextField instructionLabel = new TextField(step);
             steps.getItems().add(instructionLabel);
         }
-        SplitPane tags = new SplitPane();
         tags.setOrientation(javafx.geometry.Orientation.VERTICAL);
         for(String tag : recipe.getTags()) {
-            Label tagLabel = new Label(tag);
+            TextField tagLabel = new TextField(tag);
             tags.getItems().add(tagLabel);
         }
 
@@ -79,9 +92,9 @@ public class FullRecipe extends Application {
         chatMessage = new TextField();
         chatPane.getItems().addAll(name, chatMessage);
         chatPane.setDividerPosition(0, 0.2);
-        chatMessage.setOnAction(actionEvent -> {
-            sendMessage();
-        });
+        chatMessage.setOnAction(actionEvent -> sendMessage());
+        deleteButton.setOnAction(actionEvent -> deleteRecipe(stage));
+        updateButton.setOnAction(actionEvent -> updateRecipe());
         addDbMessages();
         ScrollPane chatScroll = new ScrollPane();
         chatScroll.setContent(chat);
@@ -90,11 +103,86 @@ public class FullRecipe extends Application {
         chatScroll.setMaxHeight(200);
         // Scroll to bottom of chat when new message is added
         chatScroll.vvalueProperty().bind(chat.heightProperty());
-        root.getChildren().addAll(recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
+        root.getChildren().addAll(buttonBar, recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
         scrollPane.setContent(root);
         stage.setScene(new javafx.scene.Scene(scrollPane, 400, 500));
         stage.setTitle(recipe.getName());
         stage.show();
+    }
+
+    private void updateRecipe() {
+        try {
+            apiHandler.updateRecipe(getCurrentRecipe());
+            addInfoMessage("Recipe updated");
+        } catch (IOException e) {
+            addErrorMessage("Could not update recipe > " + e.getMessage());
+        }
+    }
+
+    private Recipe getCurrentRecipe() {
+        Recipe recipe = new Recipe();
+        recipe.setId(this.recipe.getId());
+        recipe.setName(recipeName.getText());
+        recipe.setDescription(recipeDescription.getText());
+        recipe.setTags(getTags());
+        recipe.setIngredients(getIngredients());
+        recipe.setSteps(getSteps());
+        return recipe;
+    }
+
+    private List<String> getSteps() {
+        List<String> stepStrings = new ArrayList<>();
+        for(Node node : steps.getItems()) {
+            TextField step = (TextField) node;
+            stepStrings.add(step.getText());
+        }
+        return stepStrings;
+    }
+
+    private List<Ingredient> getIngredients() {
+        List<Ingredient> ingredients = new ArrayList<>();
+        for(Node node : this.ingredients.getItems()) {
+            VBox ingredientBox = (VBox) node;
+            TextField name = (TextField) ingredientBox.getChildren().get(0);
+            TextField amount = (TextField) ingredientBox.getChildren().get(1);
+            TextField unit = (TextField) ingredientBox.getChildren().get(2);
+            Ingredient ingredient = new Ingredient();
+            ingredient.setName(name.getText());
+            ingredient.setAmount(Double.parseDouble(amount.getText()));
+            ingredient.setUnit(unit.getText());
+            ingredients.add(ingredient);
+        }
+        return ingredients;
+    }
+
+    private List<String> getTags() {
+        List<String> tagStrings = new ArrayList<>();
+        for(Node node : tags.getItems()) {
+            TextField tag = (TextField) node;
+            tagStrings.add(tag.getText());
+        }
+        return tagStrings;
+    }
+
+
+    private void deleteRecipe(Stage stage) {
+        try {
+            apiHandler.deleteRecipe(recipe.getId());
+            stage.close();
+        } catch (IOException e) {
+            addErrorMessage("Could not delete recipe > " + e.getMessage());
+        }
+    }
+    private void addMessage(String message, Color color) {
+        Text text = new Text(message + "\n");
+        text.setFill(color);
+        Platform.runLater(() -> chat.getChildren().add(text));
+    }
+    private void addErrorMessage(String message) {
+        addMessage(message, Color.RED);
+    }
+    private void addInfoMessage(String message) {
+        addMessage(message, Color.GREEN);
     }
     // Add all messages from the database to the chat
     private void addDbMessages() {
