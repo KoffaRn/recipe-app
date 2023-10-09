@@ -38,7 +38,7 @@ class RecipeServiceTest {
         recipe.setName("Name");
         recipe.setSteps(new ArrayList<>());
         recipe.setTags(new ArrayList<>());
-        when(recipeRepository.save(Mockito.<Recipe>any())).thenReturn(recipe);
+        when(recipeRepository.save(Mockito.any())).thenReturn(recipe);
 
         Recipe recipe2 = new Recipe();
         recipe2.setDescription("The characteristics of someone or something");
@@ -48,7 +48,7 @@ class RecipeServiceTest {
         recipe2.setSteps(new ArrayList<>());
         recipe2.setTags(new ArrayList<>());
         assertSame(recipe, recipeService.save(recipe2));
-        verify(recipeRepository).save(Mockito.<Recipe>any());
+        verify(recipeRepository).save(Mockito.any());
     }
 
     /**

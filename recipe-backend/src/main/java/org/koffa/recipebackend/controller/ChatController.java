@@ -20,9 +20,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/chat")
-/**
- * This class is responsible for handling the chat messages.
- */
 public class ChatController {
     private final KafkaProducer kafkaProducer;
     private final ChatMessageService chatMessageService;

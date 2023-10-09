@@ -44,7 +44,7 @@ class KafkaProducerTest {
      */
     @Test
     void testSendMessage() {
-        when(kafkaTemplate2.send(Mockito.<String>any(), Mockito.<ChatMessage>any())).thenReturn(new CompletableFuture<>());
+        when(kafkaTemplate2.send(Mockito.any(), Mockito.any())).thenReturn(new CompletableFuture<>());
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(1L);
@@ -53,7 +53,7 @@ class KafkaProducerTest {
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
         kafkaProducer.sendMessage(chatMessage);
-        verify(kafkaTemplate2).send(Mockito.<String>any(), Mockito.<ChatMessage>any());
+        verify(kafkaTemplate2).send(Mockito.any(), Mockito.any());
         assertEquals(1L, chatMessage.getId());
         assertEquals("Sender", chatMessage.getSender());
         assertEquals(1L, chatMessage.getRecipeId().longValue());
@@ -70,7 +70,7 @@ class KafkaProducerTest {
 
         completableFuture.obtrudeValue(
                 new SendResult<>(producerRecord, new RecordMetadata(new TopicPartition("Topic", 1), 1L, 1, 10L, 3, 3)));
-        when(kafkaTemplate2.send(Mockito.<String>any(), Mockito.<ChatMessage>any())).thenReturn(completableFuture);
+        when(kafkaTemplate2.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(1L);
@@ -79,7 +79,7 @@ class KafkaProducerTest {
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
         kafkaProducer.sendMessage(chatMessage);
-        verify(kafkaTemplate2).send(Mockito.<String>any(), Mockito.<ChatMessage>any());
+        verify(kafkaTemplate2).send(Mockito.any(), Mockito.any());
         assertEquals(1L, chatMessage.getId());
         assertEquals("Sender", chatMessage.getSender());
         assertEquals(1L, chatMessage.getRecipeId().longValue());
@@ -93,7 +93,7 @@ class KafkaProducerTest {
     void testSendMessage3() {
         CompletableFuture<SendResult<String, ChatMessage>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeException(new Throwable());
-        when(kafkaTemplate2.send(Mockito.<String>any(), Mockito.<ChatMessage>any())).thenReturn(completableFuture);
+        when(kafkaTemplate2.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(1L);
@@ -102,7 +102,7 @@ class KafkaProducerTest {
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
         kafkaProducer.sendMessage(chatMessage);
-        verify(kafkaTemplate2).send(Mockito.<String>any(), Mockito.<ChatMessage>any());
+        verify(kafkaTemplate2).send(Mockito.any(), Mockito.any());
         assertEquals(1L, chatMessage.getId());
         assertEquals("Sender", chatMessage.getSender());
         assertEquals(1L, chatMessage.getRecipeId().longValue());
@@ -116,7 +116,7 @@ class KafkaProducerTest {
     void testSendMessage4() {
         CompletableFuture<SendResult<String, ChatMessage>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeValue(new SendResult<>(new ProducerRecord<>("Topic", new ChatMessage()), null));
-        when(kafkaTemplate2.send(Mockito.<String>any(), Mockito.<ChatMessage>any())).thenReturn(completableFuture);
+        when(kafkaTemplate2.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(1L);
@@ -125,7 +125,7 @@ class KafkaProducerTest {
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
         kafkaProducer.sendMessage(chatMessage);
-        verify(kafkaTemplate2).send(Mockito.<String>any(), Mockito.<ChatMessage>any());
+        verify(kafkaTemplate2).send(Mockito.any(), Mockito.any());
         assertEquals(1L, chatMessage.getId());
         assertEquals("Sender", chatMessage.getSender());
         assertEquals(1L, chatMessage.getRecipeId().longValue());
@@ -139,7 +139,7 @@ class KafkaProducerTest {
     void testSendMessage5() {
         CompletableFuture<SendResult<String, ChatMessage>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeValue(null);
-        when(kafkaTemplate2.send(Mockito.<String>any(), Mockito.<ChatMessage>any())).thenReturn(completableFuture);
+        when(kafkaTemplate2.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(1L);
@@ -148,7 +148,7 @@ class KafkaProducerTest {
         chatMessage.setSender("Sender");
         chatMessage.setTimestamp(mock(Timestamp.class));
         kafkaProducer.sendMessage(chatMessage);
-        verify(kafkaTemplate2).send(Mockito.<String>any(), Mockito.<ChatMessage>any());
+        verify(kafkaTemplate2).send(Mockito.any(), Mockito.any());
         assertEquals(1L, chatMessage.getId());
         assertEquals("Sender", chatMessage.getSender());
         assertEquals(1L, chatMessage.getRecipeId().longValue());
@@ -160,7 +160,7 @@ class KafkaProducerTest {
      */
     @Test
     void testSendMessage6() {
-        when(kafkaTemplate.send(Mockito.<String>any(), Mockito.<Recipe>any())).thenReturn(new CompletableFuture<>());
+        when(kafkaTemplate.send(Mockito.any(), Mockito.any())).thenReturn(new CompletableFuture<>());
 
         Recipe message = new Recipe();
         message.setDescription("The characteristics of someone or something");
@@ -171,7 +171,7 @@ class KafkaProducerTest {
         message.setSteps(new ArrayList<>());
         message.setTags(new ArrayList<>());
         kafkaProducer.sendMessage(message);
-        verify(kafkaTemplate).send(Mockito.<String>any(), Mockito.<Recipe>any());
+        verify(kafkaTemplate).send(Mockito.any(), Mockito.any());
         assertEquals("The characteristics of someone or something", message.getDescription());
         assertEquals(ingredients, message.getTags());
         assertEquals(ingredients, message.getSteps());
@@ -190,7 +190,7 @@ class KafkaProducerTest {
 
         completableFuture.obtrudeValue(
                 new SendResult<>(producerRecord, new RecordMetadata(new TopicPartition("Topic", 1), 1L, 1, 10L, 3, 3)));
-        when(kafkaTemplate.send(Mockito.<String>any(), Mockito.<Recipe>any())).thenReturn(completableFuture);
+        when(kafkaTemplate.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         Recipe message = new Recipe();
         message.setDescription("The characteristics of someone or something");
@@ -201,7 +201,7 @@ class KafkaProducerTest {
         message.setSteps(new ArrayList<>());
         message.setTags(new ArrayList<>());
         kafkaProducer.sendMessage(message);
-        verify(kafkaTemplate).send(Mockito.<String>any(), Mockito.<Recipe>any());
+        verify(kafkaTemplate).send(Mockito.any(), Mockito.any());
         assertEquals("The characteristics of someone or something", message.getDescription());
         assertEquals(ingredients, message.getTags());
         assertEquals(ingredients, message.getSteps());
@@ -217,7 +217,7 @@ class KafkaProducerTest {
     void testSendMessage8() {
         CompletableFuture<SendResult<String, Recipe>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeException(new Throwable());
-        when(kafkaTemplate.send(Mockito.<String>any(), Mockito.<Recipe>any())).thenReturn(completableFuture);
+        when(kafkaTemplate.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         Recipe message = new Recipe();
         message.setDescription("The characteristics of someone or something");
@@ -228,7 +228,7 @@ class KafkaProducerTest {
         message.setSteps(new ArrayList<>());
         message.setTags(new ArrayList<>());
         kafkaProducer.sendMessage(message);
-        verify(kafkaTemplate).send(Mockito.<String>any(), Mockito.<Recipe>any());
+        verify(kafkaTemplate).send(Mockito.any(), Mockito.any());
         assertEquals("The characteristics of someone or something", message.getDescription());
         assertEquals(ingredients, message.getTags());
         assertEquals(ingredients, message.getSteps());
@@ -244,7 +244,7 @@ class KafkaProducerTest {
     void testSendMessage9() {
         CompletableFuture<SendResult<String, Recipe>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeValue(new SendResult<>(new ProducerRecord<>("Topic", new Recipe()), null));
-        when(kafkaTemplate.send(Mockito.<String>any(), Mockito.<Recipe>any())).thenReturn(completableFuture);
+        when(kafkaTemplate.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         Recipe message = new Recipe();
         message.setDescription("The characteristics of someone or something");
@@ -255,7 +255,7 @@ class KafkaProducerTest {
         message.setSteps(new ArrayList<>());
         message.setTags(new ArrayList<>());
         kafkaProducer.sendMessage(message);
-        verify(kafkaTemplate).send(Mockito.<String>any(), Mockito.<Recipe>any());
+        verify(kafkaTemplate).send(Mockito.any(), Mockito.any());
         assertEquals("The characteristics of someone or something", message.getDescription());
         assertEquals(ingredients, message.getTags());
         assertEquals(ingredients, message.getSteps());
@@ -271,7 +271,7 @@ class KafkaProducerTest {
     void testSendMessage10() {
         CompletableFuture<SendResult<String, Recipe>> completableFuture = new CompletableFuture<>();
         completableFuture.obtrudeValue(null);
-        when(kafkaTemplate.send(Mockito.<String>any(), Mockito.<Recipe>any())).thenReturn(completableFuture);
+        when(kafkaTemplate.send(Mockito.any(), Mockito.any())).thenReturn(completableFuture);
 
         Recipe message = new Recipe();
         message.setDescription("The characteristics of someone or something");
@@ -282,7 +282,7 @@ class KafkaProducerTest {
         message.setSteps(new ArrayList<>());
         message.setTags(new ArrayList<>());
         kafkaProducer.sendMessage(message);
-        verify(kafkaTemplate).send(Mockito.<String>any(), Mockito.<Recipe>any());
+        verify(kafkaTemplate).send(Mockito.any(), Mockito.any());
         assertEquals("The characteristics of someone or something", message.getDescription());
         assertEquals(ingredients, message.getTags());
         assertEquals(ingredients, message.getSteps());

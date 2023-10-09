@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class RecipeFrontendApplication {
-
     public static void main(String[] args) {
         Application.launch(MainUi.class, args);
     }
-
 }

@@ -3,8 +3,6 @@ package org.koffa.recipebackend.service;
 import org.koffa.recipebackend.entity.ChatMessage;
 import org.koffa.recipebackend.repository.ChatMessageRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,5 +19,9 @@ public class ChatMessageService {
         List<ChatMessage> messages = chatMessageRepository.findByRecipeId(recipeId);
         Collections.sort(messages);
         return messages;
+    }
+
+    public void deleteByRecipeId(long id) {
+        chatMessageRepository.deleteByRecipeId(id);
     }
 }

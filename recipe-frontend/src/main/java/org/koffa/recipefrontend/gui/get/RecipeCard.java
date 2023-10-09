@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 public class RecipeCard extends VBox {
-    Logger logger = LoggerFactory.getLogger(RecipeCard.class);
+    private final Logger logger = LoggerFactory.getLogger(RecipeCard.class);
     @Autowired
     BeanFactory beanFactory;
     private Recipe recipe;
