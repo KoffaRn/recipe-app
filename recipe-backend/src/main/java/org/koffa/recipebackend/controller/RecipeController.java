@@ -3,6 +3,7 @@ package org.koffa.recipebackend.controller;
 import org.koffa.recipebackend.entity.Recipe;
 import org.koffa.recipebackend.kafka.KafkaProducer;
 import org.koffa.recipebackend.repository.RecipeRepository;
+import org.koffa.recipebackend.service.ChatMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,11 @@ public class RecipeController {
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
     private final KafkaProducer kafkaProducer;
     private final RecipeRepository repository;
-    public RecipeController(KafkaProducer kafkaProducer, RecipeRepository repository) {
+    private final ChatMessageService chatMessageService;
+    public RecipeController(KafkaProducer kafkaProducer, RecipeRepository repository, ChatMessageService chatMessageService) {
         this.kafkaProducer = kafkaProducer;
         this.repository = repository;
+        this.chatMessageService = chatMessageService;
     }
     @GetMapping("/get")
     public ResponseEntity<List<Recipe>> getAll() {
@@ -95,6 +98,7 @@ public class RecipeController {
         // Delete a recipe
         try {
             repository.deleteById(id);
+            chatMessageService.deleteByRecipeId(id);
             return ResponseEntity.ok().body("Recipe deleted");
         } catch (Exception e) {
             logger.error("Error deleting recipe: " + e.getMessage());

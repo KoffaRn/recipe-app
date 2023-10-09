@@ -20,4 +20,8 @@ public class ChatMessageService {
         Collections.sort(messages);
         return messages;
     }
+
+    public void deleteByRecipeId(long id) {
+        chatMessageRepository.deleteByRecipeId(id);
+    }
 }

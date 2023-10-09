@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class is responsible for displaying a full recipe.
@@ -33,8 +34,8 @@ public class FullRecipe extends Application {
     private final Recipe recipe;
     private final TextFlow chat = new TextFlow();
     private ChatWebSocketClient client;
-    private TextField chatMessage = new TextField();
-    private TextField name = new TextField("Name");
+    private final TextField chatMessage = new TextField();
+    private final TextField name = new TextField("Name");
     private final ApiHandler apiHandler;
     private final SplitPane ingredients = new SplitPane();
     private TextField recipeName;
@@ -53,18 +54,72 @@ public class FullRecipe extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // Instantiate the client and connect to the websocket
-        client = new ChatWebSocketClient(chatUrl, this);
-        client.connect();
-        client.subscribe(recipe.getId());
+        connectChatClient();
         // Create the UI
+        VBox root = new VBox();
+        ButtonBar buttonBar = updateDeteteButtons(stage);
+        ScrollPane scrollPane = new ScrollPane();
+        recipeName = new TextField(recipe.getName());
+        recipeDescription = new TextField(recipe.getDescription());
+        populateIngredients();
+        populateStrings(steps, recipe.getSteps());
+        populateStrings(tags, recipe.getTags());
+        Label chatLabel = new Label("Chat");
+        SplitPane chatPane = getChatPane();
+        addDbMessages();
+        ScrollPane chatScroll = getChatScroll();
+        // Add all the UI elements to the root
+        root.getChildren().addAll(buttonBar, recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
+        scrollPane.setContent(root);
+        stage.setScene(new javafx.scene.Scene(scrollPane, 400, 500));
+        stage.setTitle(recipe.getName());
+        stage.show();
+    }
+
+    private ScrollPane getChatScroll() {
+        ScrollPane chatScroll = new ScrollPane();
+        chatScroll.setContent(chat);
+        chat.setMaxWidth(350);
+        chatScroll.setMaxWidth(370);
+        chatScroll.setMaxHeight(200);
+        // Scroll to bottom of chat when new message is added
+        chatScroll.vvalueProperty().bind(chat.heightProperty());
+        return chatScroll;
+    }
+
+    private SplitPane getChatPane() {
+        SplitPane chatPane = new SplitPane();
+        chatPane.getItems().addAll(name, chatMessage);
+        chatPane.setDividerPosition(0, 0.2);
+        chatMessage.setOnAction(actionEvent -> sendMessage());
+        return chatPane;
+    }
+
+    private ButtonBar updateDeteteButtons(Stage stage) {
         ButtonBar buttonBar = new ButtonBar();
         Button updateButton = new Button("Update");
         Button deleteButton = new Button("Delete");
+        deleteButton.setOnAction(actionEvent -> deleteRecipe(stage));
+        updateButton.setOnAction(actionEvent -> updateRecipe());
         buttonBar.getButtons().addAll(updateButton, deleteButton);
-        ScrollPane scrollPane = new ScrollPane();
-        VBox root = new VBox();
-        recipeName = new TextField(recipe.getName());
-        recipeDescription = new TextField(recipe.getDescription());
+        return buttonBar;
+    }
+
+    private void connectChatClient() throws ExecutionException, InterruptedException {
+        client = new ChatWebSocketClient(chatUrl, this);
+        client.connect();
+        client.subscribe(recipe.getId());
+    }
+
+    private void populateStrings(SplitPane steps, List<String> recipe) {
+        steps.setOrientation(Orientation.VERTICAL);
+        for (String step : recipe) {
+            TextField instructionLabel = new TextField(step);
+            steps.getItems().add(instructionLabel);
+        }
+    }
+
+    private void populateIngredients() {
         ingredients.setOrientation(Orientation.VERTICAL);
         for(Ingredient ingredient : recipe.getIngredients()) {
             TextField ingredientName = new TextField(ingredient.getName());
@@ -75,41 +130,6 @@ public class FullRecipe extends Application {
             ingredientBox.getChildren().addAll(ingredientName, ingredientAmount, ingredientUnit);
             ingredients.getItems().add(ingredientBox);
         }
-        steps.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        for(String step : recipe.getSteps()) {
-            TextField instructionLabel = new TextField(step);
-            steps.getItems().add(instructionLabel);
-        }
-        tags.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        for(String tag : recipe.getTags()) {
-            TextField tagLabel = new TextField(tag);
-            tags.getItems().add(tagLabel);
-        }
-
-        Label chatLabel = new Label("Chat");
-        SplitPane chatPane = new SplitPane();
-        name = new TextField("Name");
-        chatMessage = new TextField();
-        chatPane.getItems().addAll(name, chatMessage);
-        chatPane.setDividerPosition(0, 0.2);
-        chatMessage.setOnAction(actionEvent -> sendMessage());
-        deleteButton.setOnAction(actionEvent -> deleteRecipe(stage));
-        updateButton.setOnAction(actionEvent -> updateRecipe());
-        addDbMessages();
-        ScrollPane chatScroll = new ScrollPane();
-        chatScroll.setContent(chat);
-        chat.setMaxWidth(350);
-        chatScroll.setMaxWidth(370);
-        chatScroll.setMaxHeight(200);
-        // Scroll to bottom of chat when new message is added
-        chatScroll.vvalueProperty().bind(chat.heightProperty());
-
-        // Add all the UI elements to the root
-        root.getChildren().addAll(buttonBar, recipeName, recipeDescription,ingredients,steps,tags,chatLabel,chatScroll,chatPane);
-        scrollPane.setContent(root);
-        stage.setScene(new javafx.scene.Scene(scrollPane, 400, 500));
-        stage.setTitle(recipe.getName());
-        stage.show();
     }
 
     private void updateRecipe() {
