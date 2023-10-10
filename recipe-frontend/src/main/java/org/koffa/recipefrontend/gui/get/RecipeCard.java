@@ -10,15 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 public class RecipeCard extends VBox {
     private final Logger logger = LoggerFactory.getLogger(RecipeCard.class);
     @Autowired
     BeanFactory beanFactory;
-    private Recipe recipe;
-    @Value(value = "${websocket.url}")
-    private String url;
     private FullRecipe fullRecipe;
     public RecipeCard(Recipe recipe) {
         SplitPane card = new SplitPane();

@@ -33,7 +33,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(
                 getCommonProps(),
                 new StringDeserializer(),
-                new ErrorHandlingDeserializer<>(new RecipeJsonDeseriazlier())
+                new ErrorHandlingDeserializer<>(new RecipeJsonDeserializer())
         );
     }
 

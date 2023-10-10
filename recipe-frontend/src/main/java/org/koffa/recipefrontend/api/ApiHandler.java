@@ -14,7 +14,7 @@ import org.koffa.recipefrontend.pojo.ChatMessage;
 import org.koffa.recipefrontend.pojo.Recipe;
 import org.springframework.stereotype.Service;
 @Service
-public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter {
+public class ApiHandler implements RecipeSender, ChatMessageGetter {
     private final URL apiUrl;
     public ApiHandler(URL apiUrl) {
         this.apiUrl = apiUrl;
@@ -27,27 +27,23 @@ public class ApiHandler implements RecipeSender, RecipeGetter, ChatMessageGetter
         return doOutput(recipe, connection).toString();
     }
 
-    @Override
     public Recipe getRecipe(int id) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/get/" + id).openConnection();
         return Recipe.fromJson(getString(connection));
     }
 
-    @Override
     public List<Recipe> getAllRecipes() throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/get").openConnection();
         Gson gson = new Gson();
         return gson.fromJson(getString(connection), new TypeToken<List<Recipe>>(){}.getType());
     }
 
-    @Override
     public ArrayList<String> getAllTags() throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/get/tag").openConnection();
         Gson gson = new Gson();
         return gson.fromJson(getString(connection), new TypeToken<ArrayList<String>>(){}.getType());
     }
 
-    @Override
     public List<Recipe> getRecipesByTag(String tag) throws IOException {
         String encodedTag = URLEncoder.encode(tag, StandardCharsets.UTF_8).replace("+", "%20");
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl + "/recipe/get/tag/" + encodedTag).openConnection();

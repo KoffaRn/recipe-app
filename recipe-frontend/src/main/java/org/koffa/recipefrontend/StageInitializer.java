@@ -24,7 +24,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     /**
      * This method is called when the application is ready to start
-     * @param event the event that is fired when the application is ready to start
+     * @param event the StageReadyEvent that is fired when the application is ready to start
      */
     @Override
     public void onApplicationEvent(StageReadyEvent event) {

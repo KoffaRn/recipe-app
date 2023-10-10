@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.koffa.recipefrontend.api.ApiHandler;
-import org.koffa.recipefrontend.api.RecipeGetter;
 import org.koffa.recipefrontend.pojo.Recipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,12 +77,12 @@ public class GetBox extends VBox {
         }
     }
 
-    private Button getButton(RecipeGetter recipeGetter, String tag) {
+    private Button getButton(ApiHandler apiHandler, String tag) {
         Button tagButton = new Button(tag);
         tagButton.setOnAction(event -> {
             try {
                 recipeCards.getItems().clear();
-                populateList(recipeGetter.getRecipesByTag(tag), recipeCards);
+                populateList(apiHandler.getRecipesByTag(tag), recipeCards);
             } catch (IOException e) {
                 showApiError("Could not get content from API, make sure URL is configured and backend up and running > \n " + e.getMessage());
             }
