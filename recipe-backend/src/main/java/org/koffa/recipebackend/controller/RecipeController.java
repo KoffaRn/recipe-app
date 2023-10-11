@@ -99,6 +99,7 @@ public class RecipeController {
         try {
             repository.deleteById(id);
             chatMessageService.deleteByRecipeId(id);
+            logger.info("Recipe deleted: " + id);
             return ResponseEntity.ok().body("Recipe deleted");
         } catch (Exception e) {
             logger.error("Error deleting recipe: " + e.getMessage());
