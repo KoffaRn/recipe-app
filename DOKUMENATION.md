@@ -41,5 +41,6 @@ Bara en klient åt gången kan ha en kafka-consumer iom. att de annars får konf
 Har lärt mig mycket om hur Spring fungerar iom. klient-applikationen som krävde att jag skrev många fler egna komponenter än vad jag gjort tidigare. Lärde mig också mycket om Kafka, WebSockets och STOMP vilket känns väldigt användbart.
 ### Vad hade ni gjort annorlunda om ni gjort om projektet
 Jag hade byggt klienten som Spring boot redan från början. Jag hade nog inte gjort kafka-consumern som jag gjorde om det inte krävdes av uppgiftsbeskrivningen.
+Jag hade nog också byggt upp Kafka-klienten i frontend-applikationen anorlunda, och KafkaConsumern hade använt ett Listenable-interface och registrerat LoggerBox som en Listener på det för att göra det enklare att bygga ut med fler funktioner som lyssnar på Kafka-topicen.
 ### Vilka möjligheter ser du med de kunskaper du fått under kursen.
 Bra kunskaper att ha, framförallt när det gäller BackEnd. Tror nog att mer och mer klient/frontend går över till webb, så javafx kanske inte är superduperanvänt idag, men såklart kan samma tankesätt användas i även andra frontend-lösningar.
