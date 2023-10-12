@@ -97,8 +97,8 @@ public class RecipeController {
     public ResponseEntity<String> delete(@PathVariable long id) {
         // Delete a recipe
         try {
-            repository.deleteById(id);
             chatMessageService.deleteByRecipeId(id);
+            repository.deleteById(id);
             logger.info("Recipe deleted: " + id);
             return ResponseEntity.ok().body("Recipe deleted");
         } catch (Exception e) {

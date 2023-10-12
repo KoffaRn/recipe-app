@@ -57,6 +57,7 @@ To install this project, follow these steps:
    * Make sure you have made the changes to the application.properties file as described in the previous steps
    * Make sure your database (MySQL / MariaDB) is running
    * Make sure kafka is running (see previous steps)
+   * By default, the application runs with create-drop, which means that the database will be dropped and recreated every time the application is started, this is good for testing purposes because you won't have old data lying about. If you want to keep the data in the database, you can change the settings in the application.properties file recipe-backend/resources/
    1. **Running the app from an IntelliJ**
       * Open the project in IntelliJ
       * Run the recipe-backend application, RecipeBackendApplication.java
