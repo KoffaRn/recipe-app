@@ -25,7 +25,7 @@ public class ChatMessageJsonDeserializer extends JsonDeserializer<ChatMessage> {
         try {
             ChatMessage chatMessage = mapper.readValue(data, ChatMessage.class);
             logger.info("Deserialized chat message: " + chatMessage);
-            return mapper.readValue(data, ChatMessage.class);
+            return chatMessage;
         } catch (Exception e) {
             logger.error(e.getMessage());
             return null;

@@ -76,7 +76,6 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(recipeConsumerFactory());
         return factory;
     }
-
     /**
      * Creates a Kafka listener container factory for the ChatMessage entity.
      * @return Kafka listener container factory for the ChatMessage entity.

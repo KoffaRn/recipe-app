@@ -1,7 +1,6 @@
 # Recipe app
 
 ## Description
-
 This is a recipe app that allows users to save recipes. The recipes can be filtered by tags and each recipe has a chat section so that users can discuss recipes and ask questions.
 It uses the following technologies:
 * Java
@@ -12,15 +11,12 @@ It uses the following technologies:
 * SQL
 
 ## Table of Contents
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Credits](#credits)
 - [Dependencies](#dependencies)
-- [Tests](#tests)
 
 ## Installation
-
 To install this project, follow these steps:
 1. **Pre-requisites:**
     * Java 17
@@ -73,7 +69,6 @@ To install this project, follow these steps:
         * Windows: Run `.\mvnww.cmd spring-boot:run`
 
 ## Usage
-
 1. In the recipe-frontend application use the Send-tab to save a recipe in the database
 ![Send-tab](assets/images/send.png)
 2. In the recipe-frontend application use the Get-tab to see the saved recipes, update all recipes by clicking `Refresh`, you can filter recipes by tags at the top of the window.
@@ -94,12 +89,6 @@ To install this project, follow these steps:
 
 ## Dependencies
 See the [main pom.xml](pom.xml), [recipe-backend pom.xml](recipe-backend/pom.xml) and [recipe-frontend pom.xml](recipe-frontend/pom.xml) files for dependencies
-
-## Tests
-
-The tests can be found in the recipe-backend/src/test/java/org/koffa/recipebackend/ folder
-
-[Test report](htmlReport/index.html)
 
 ## Discussion
 See [DOKUMENATION.md](DOKUMENATION.md) for a discussion about the project (in Swedish)
